@@ -9,7 +9,7 @@ class WindowGui(QWidget):
         super().__init__()
 
         self.api = api
-        self.text = self.api.reasoning_content1
+        self.text = self.api.reasoning_content_output_spread
         self.init_window()
 
         # content_updated_signal作为激活信号激活self.update_text
