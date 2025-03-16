@@ -18,4 +18,4 @@ class Button(QWidget):
         btn.clicked.connect(QApplication.quit)
         btn.setToolTip('This is a <b>QuitButton</b> widget')
         btn.resize(90, 30)
-        btn.move(100, 150)
+        btn.setFixedSize(90, 30)
