@@ -1,11 +1,9 @@
 import sys
-from PyQt6.QtCore import Qt, QTimer
-from PyQt6.QtWidgets import QApplication, QWidget, QTextEdit, QGridLayout
+from PyQt6.QtWidgets import QApplication
 
-from gui import WindowGui
-from button import Button
+from worker_thread import  WorkerThread
 from core import CallAlibabaApi
-from worker_thread import WorkerThread
+from gui import WindowGui
 
 # 创建一个应用程序对象,所有元素的依赖实例
 app = QApplication(sys.argv)
@@ -16,6 +14,7 @@ call_alibaba_api = CallAlibabaApi()
 # 实例化整个窗口的GUI
 main_window = WindowGui(call_alibaba_api)
 main_window.show()
+
 
 # # 通过线程异步运行阿里云api的调用类
 # thread_caa = WorkerThread(call_alibaba_api)

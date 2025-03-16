@@ -1,5 +1,6 @@
 from PyQt6.QtCore import QThread
 
+
 class WorkerThread(QThread):
     def __init__(self, api_instance):
         super().__init__()

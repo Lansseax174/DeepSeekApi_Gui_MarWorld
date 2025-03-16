@@ -4,12 +4,14 @@ from openai import OpenAI
 
 class CallAlibabaApi(QObject):
     # content_updated_signal = pyqtSignal(str)
-    answer_content_updated_signal = pyqtSignal(str)
-    reasoning_content_updated_signal = pyqtSignal(str)
+    answer_content_updated_signal = pyqtSignal(str)  # 更新回答文本显示框的信号
+    reasoning_content_updated_signal = pyqtSignal(str)  # 更新回答思考文本显示框的信号
+    finished_signal = pyqtSignal()
+
     def __init__(self):
         super().__init__()
-        self.reasoning_content_output_spread = '思考内容'
-        self.answer_content_output_spread = '回答内容'
+        self.reasoning_content_output_spread = '思考内容----\n'
+        self.answer_content_output_spread = '回答内容----\n'
 
     def call_alibaba_api(self):
         # 初始化OpenAI客户端
@@ -46,7 +48,7 @@ class CallAlibabaApi(QObject):
             else:
                 delta = chunk.choices[0].delta
                 # 打印思考过程
-                if hasattr(delta, 'reasoning_content') and delta.reasoning_content != None:
+                if hasattr(delta, 'reasoning_content') and delta.reasoning_content is not None:
                     print(delta.reasoning_content, end='', flush=True)
                     reasoning_content += delta.reasoning_content
                     self.reasoning_content_output_spread += delta.reasoning_content
@@ -55,7 +57,7 @@ class CallAlibabaApi(QObject):
                     self.reasoning_content_updated_signal.emit(self.reasoning_content_output_spread)
                 else:
                     # 开始回复
-                    if delta.content != "" and is_answering == False:
+                    if delta.content != "" and is_answering is False:
                         print("\n" + "=" * 20 + "完整回复" + "=" * 20 + "\n")
                         is_answering = True
                     # 打印回复过程
@@ -67,3 +69,5 @@ class CallAlibabaApi(QObject):
         # print(reasoning_content)
         # print("=" * 20 + "完整回复" + "=" * 20 + "\n")
         # print(answer_content)
+
+        self.finished_signal.emit()  # 发送完成思考和回答的信号
