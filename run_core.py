@@ -1,7 +1,7 @@
 import sys
 from PyQt6.QtWidgets import QApplication
 
-from worker_thread import  WorkerThread
+from worker_thread import WorkerThread
 from core import CallAlibabaApi
 from gui import WindowGui
 
