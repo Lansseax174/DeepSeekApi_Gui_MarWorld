@@ -1,6 +1,7 @@
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, QTimer
+from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QWidget, QTextEdit, QGridLayout, QMainWindow, QVBoxLayout
-
+from PyQt6.QtCore import QDate, QDateTime, Qt, QTime
 import button
 
 
@@ -8,6 +9,7 @@ class WindowGui(QMainWindow):
     def __init__(self, api):
         super().__init__()
         # 定义一些后面要用的变量
+        self.show_text = None
         self.button = None
         self.text_show_answer_content = None
         self.text_show_reasoning_content = None
@@ -39,21 +41,23 @@ class WindowGui(QMainWindow):
         model_api_button = button.ModelAndApiSelectButton(self)
 
         self.statusBar().showMessage('Ready.')
+
         # 创建一个显示模型的回答内容的显示框
-        self.text_show_answer_content = QTextEdit()
-        self.text_show_answer_content.setText(self.answer_text)
-        self.text_show_answer_content.setReadOnly(True)  # 只读，不可输入内容
-        self.text_show_answer_content.setFixedSize(600, 400)
+        self.make_text_show_answer_content()
 
         # 创建一个显示模型的思考内容的显示框
-        self.text_show_reasoning_content = QTextEdit()
-        self.text_show_reasoning_content.setText(self.reasoning_text)
-        self.text_show_reasoning_content.setReadOnly(True)  # 只读，不可输入内容
-        self.text_show_reasoning_content.setFixedSize(300, 700)
+        self.make_text_show_reasoning_content()
+
+        # 创建一个显示时间的显示框
+        self.make_time_show()
 
         # self.timer = QTimer(self)
         # self.timer.timeout.connect(self.update_text)
         # self.timer.start(1000)
+
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.update_time)
+        self.timer.start(1000)
 
         # 用户输入内容的文本框
         input_text_edit = QTextEdit()
@@ -62,6 +66,7 @@ class WindowGui(QMainWindow):
 
         button_container = QWidget()
         button_layout = QVBoxLayout()
+        button_layout.addWidget(self.time_show)
         button_layout.addWidget(quit_button)
         button_layout.addWidget(model_api_button)
         button_container.setLayout(button_layout)
@@ -97,3 +102,53 @@ class WindowGui(QMainWindow):
 
     def output_token_ends(self):
         self.statusBar().showMessage("Ready.")
+
+    def make_text_show_answer_content(self):
+        # 创建一个显示模型的回答内容的显示框
+        self.text_show_answer_content = QTextEdit()
+        self.text_show_answer_content.setText(self.answer_text)
+        self.text_show_answer_content.setReadOnly(True)  # 只读，不可输入内容
+        self.text_show_answer_content.setFixedSize(600, 400)
+
+    def make_text_show_reasoning_content(self):
+        # 创建一个显示模型的思考内容的显示框
+        self.text_show_reasoning_content = QTextEdit()
+        self.text_show_reasoning_content.setText(self.reasoning_text)
+        self.text_show_reasoning_content.setReadOnly(True)  # 只读，不可输入内容
+        self.text_show_reasoning_content.setFixedSize(300, 700)
+
+    def make_time_show(self):
+        date = QDate.currentDate()
+        date = date.toString(Qt.DateFormat.ISODate)
+
+        now_time = QTime.currentTime()
+        now_time = now_time.toString(Qt.DateFormat.RFC2822Date)
+
+        self.show_text = date + '\n' + now_time
+
+
+
+        self.time_show = QTextEdit()
+        self.time_show.setReadOnly(True)
+        self.time_show.setFixedSize(133, 65)
+
+        font = QFont("微软雅黑", 15)  # 设置字体为 Arial，大小为 12
+        font.setBold(True)
+        self.time_show.setFont(font)
+
+        self.time_show.setText(self.show_text)
+
+    def update_time(self):
+        date = QDate.currentDate()
+        date = date.toString(Qt.DateFormat.ISODate)
+
+        now_time = QTime.currentTime()
+        now_time = now_time.toString(Qt.DateFormat.RFC2822Date)
+
+        self.show_text = date + '\n' + now_time
+
+        font = QFont("微软雅黑", 15)  # 设置字体为 Arial，大小为 12
+        font.setBold(True)
+        self.time_show.setFont(font)
+
+        self.time_show.setText(self.show_text)
