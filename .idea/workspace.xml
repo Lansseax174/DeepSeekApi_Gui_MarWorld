@@ -4,12 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e488b08b-1d2e-4d4b-bd15-e3bbea24762f" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/log_dialogue.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core.py" beforeDir="false" afterPath="$PROJECT_DIR$/core.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run_core.py" beforeDir="false" afterPath="$PROJECT_DIR$/run_core.py" afterDir="false" />
-    </list>
+    <list default="true" id="e488b08b-1d2e-4d4b-bd15-e3bbea24762f" name="更改" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -51,9 +46,9 @@
     "Python.time.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "E:/PyCharm/ProjectCatalogue/DeepSeekApi_Gui_MarWorld/run_core.py",
-    "settings.editor.selected.configurable": "preferences.general"
+    "git-widget-placeholder": "<未知>",
+    "last_opened_file_path": "E:/PyCharm/ProjectCatalogue/DeepSeekApi_Gui_MarWorld",
+    "settings.editor.selected.configurable": "preferences.lookFeel"
   }
 }]]></component>
   <component name="RunManager">
@@ -66,7 +61,6 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="SDK_NAME" value="Python 3.11 (Envir_Basic)" />
       <option name="WORKING_DIRECTORY" value="" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
