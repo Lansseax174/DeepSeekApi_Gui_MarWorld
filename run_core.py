@@ -22,9 +22,9 @@ main_window = WindowGui(call_alibaba_api)
 main_window.show()
 
 
-# 通过线程异步运行阿里云api的调用类
-thread_caa = WorkerThread(call_alibaba_api)
-thread_caa.start()
+# # 通过线程异步运行阿里云api的调用类
+# thread_caa = WorkerThread(call_alibaba_api)
+# thread_caa.start()
 
 # 启用事件循环,相当于可以智能的结束循环并退出程序的While True
 sys.exit(app.exec())

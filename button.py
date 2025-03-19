@@ -7,18 +7,22 @@ class QuitButton(QWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.btn = None
-        self.init_UI()
 
-    def init_UI(self):
         QToolTip.setFont(QFont('SansSerif', 10))
         # QToolTip.setFont(QFont('华文琥珀', 10))
-
+        # 创建QPushButton
         self.btn = QPushButton('退出MarWorld', self)
-        font = QFont('华文琥珀', 15)  # 字体设置为Arial，大小为14
-        self.btn.setFont(font)
+
+        # 字体设置为Arial，大小为14
+        self.btn.setFont(QFont('华文琥珀', 15))
+
+        # 绑定按钮作用
         self.btn.clicked.connect(QApplication.quit)
-        self.btn.setToolTip('This is a <b>QuitButton</b> widget')
+
+        # 鼠标挪上去显示个提示
+        self.btn.setToolTip('退出按钮')
+
+        # 设置按钮固定大小
         self.btn.setFixedSize(135, 60)
 
 
@@ -54,10 +58,7 @@ class ModelAndApiSelectButton(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.model_api_window = None
-        self.btn = None
-        self.init_UI()
 
-    def init_UI(self):
         QToolTip.setFont(QFont('SansSerif', 10))
         self.btn = QPushButton('Api-Model', self)
         font = QFont('华文琥珀', 13)  # 字体设置为Arial，大小为14
@@ -69,3 +70,27 @@ class ModelAndApiSelectButton(QWidget):
         parent = self.parent()
         self.model_api_window = ModelAndApiSelectWindow(parent)
         self.model_api_window.show()
+
+class InputTextEditButton(QWidget):
+    def __init__(self):
+        super().__init__()
+
+        QToolTip.setFont(QFont('SansSerif', 10))
+        # QToolTip.setFont(QFont('华文琥珀', 10))
+        # 创建QPushButton
+        self.btn = QPushButton('发送', self)
+
+        # 字体设置为Arial，大小为14
+        self.btn.setFont(QFont('华文琥珀', 15))
+
+        # 绑定按钮作用
+        self.btn.clicked.connect(self.process_input_text)
+
+        # 鼠标挪上去显示个提示
+        self.btn.setToolTip('man!')
+
+        # 设置按钮固定大小
+        self.btn.setFixedSize(135, 60)
+
+    def process_input_text(self):
+        print('aaaaaaa!')

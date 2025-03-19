@@ -10,7 +10,7 @@ class LogContext:
         self.add_reason = 0
 
         self.api = api
-        self.log_file = 'log.json'
+        self.log_file = 'LogDialogue\log.json'
 
         self.reasoning_content = ''
         self.answer_content = self.api.answer_content_output_spread

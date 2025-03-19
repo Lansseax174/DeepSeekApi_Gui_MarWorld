@@ -37,9 +37,16 @@ class WindowGui(QMainWindow):
 
         self.setWindowTitle("MarWorld")
 
+        # 退出按钮实例化
         quit_button = button.QuitButton(self)
+
+        # 切换模型和api的窗口的打开按钮的实例化
         model_api_button = button.ModelAndApiSelectButton(self)
 
+        # 发送输入框的内容给api
+        input_text_edit_button = button.InputTextEditButton()
+
+        # 初始化状态栏内容
         self.statusBar().showMessage('Ready.')
 
         # 创建一个显示模型的回答内容的显示框
@@ -62,7 +69,10 @@ class WindowGui(QMainWindow):
         # 用户输入内容的文本框
         input_text_edit = QTextEdit()
         input_text_edit.setPlaceholderText("在这里输入内容...")
+        input_text_edit.setFont(QFont("微软雅黑", 15))
+        input_text_edit.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
         input_text_edit.setFixedSize(600, 200)
+        self.text = input_text_edit.toPlainText()
 
         button_container = QWidget()
         button_layout = QVBoxLayout()
@@ -79,8 +89,10 @@ class WindowGui(QMainWindow):
         layout.addWidget(self.text_show_reasoning_content, 0, 1, 2, 1, Qt.AlignmentFlag.AlignTop)
         layout.addWidget(button_container, 0, 3, Qt.AlignmentFlag.AlignTop)
         layout.addWidget(input_text_edit, 1, 0, Qt.AlignmentFlag.AlignTop)
+        layout.addWidget(input_text_edit_button, 1, 0, Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignRight)
         # 防止AlignmentFlag.AlignLeft导致quit_button的大小被挤成0,0直接vanish
         quit_button.setMinimumSize(135, 60)
+        input_text_edit_button.setMinimumSize(135,60)
         model_api_button.setMinimumSize(100, 50)
 
         # 使用QWidet来设置布局
@@ -108,7 +120,7 @@ class WindowGui(QMainWindow):
         self.text_show_answer_content = QTextEdit()
         self.text_show_answer_content.setText(self.answer_text)
         self.text_show_answer_content.setReadOnly(True)  # 只读，不可输入内容
-        self.text_show_answer_content.setFixedSize(600, 400)
+        self.text_show_answer_content.setFixedSize(600, 430)
 
     def make_text_show_reasoning_content(self):
         # 创建一个显示模型的思考内容的显示框

@@ -63,9 +63,6 @@ class CallAlibabaApi(QObject):
                     self.reasoning_content_updated_signal.emit(self.reasoning_content_output_spread)
                     self.reason_log_judge += 1
                 else:
-                    if self.reason_log_judge > 0:
-                        self.log_reasoning_content_updated_signal.emit(self.reasoning_content_output_spread)
-                        self.reason_log_judge = 0
                     # 开始回复
                     if delta.content != "" and is_answering is False:
                         print("\n" + "=" * 20 + "完整回复" + "=" * 20 + "\n")
@@ -76,6 +73,9 @@ class CallAlibabaApi(QObject):
                     self.streaming_word = delta.content
                     self.answer_content_output_spread += delta.content
                     self.answer_content_updated_signal.emit(self.answer_content_output_spread)
+                    if self.reason_log_judge > 0:
+                        self.log_reasoning_content_updated_signal.emit(self.reasoning_content_output_spread)
+                        self.reason_log_judge = 0
         # print("=" * 20 + "完整思考过程" + "=" * 20 + "\n")
         # print(reasoning_content)
         # print("=" * 20 + "完整回复" + "=" * 20 + "\n")
