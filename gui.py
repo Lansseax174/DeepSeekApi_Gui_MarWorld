@@ -9,6 +9,9 @@ class WindowGui(QMainWindow):
     def __init__(self, api):
         super().__init__()
         # 定义一些后面要用的变量
+        self.time_show = None
+        self.text = None
+        self.timer = None
         self.show_text = None
         self.button = None
         self.text_show_answer_content = None
