@@ -13,11 +13,10 @@ class CallAlibabaApi(QObject):
 
     def __init__(self):
         super().__init__()
+        self.reason_log_judge = 0
         self.streaming_word = ''
         self.reasoning_content_output_spread = '思考内容----\n'
         self.answer_content_output_spread = '回答内容----\n'
-        self.judge_reason = False
-        self.judge_answer = False
 
     def call_alibaba_api(self):
         # 初始化OpenAI客户端
@@ -55,7 +54,6 @@ class CallAlibabaApi(QObject):
                 delta = chunk.choices[0].delta
                 # 打印思考过程
                 if hasattr(delta, 'reasoning_content') and delta.reasoning_content is not None:
-                    self.judge_reason = True
                     print(delta.reasoning_content, end='', flush=True)
                     reasoning_content += delta.reasoning_content
                     self.streaming_word = delta.reasoning_content
@@ -63,10 +61,11 @@ class CallAlibabaApi(QObject):
                     # 将self.reasoning_content_output_spread内容作为
                     # 信号内容通过信号content_updated_signal传出
                     self.reasoning_content_updated_signal.emit(self.reasoning_content_output_spread)
-                    self.log_reasoning_content_updated_signal.emit(self.streaming_word)
+                    self.reason_log_judge += 1
                 else:
-                    self.judge_reason = False
-                    self.judge_answer = True
+                    if self.reason_log_judge > 0:
+                        self.log_reasoning_content_updated_signal.emit(self.reasoning_content_output_spread)
+                        self.reason_log_judge = 0
                     # 开始回复
                     if delta.content != "" and is_answering is False:
                         print("\n" + "=" * 20 + "完整回复" + "=" * 20 + "\n")
@@ -77,11 +76,10 @@ class CallAlibabaApi(QObject):
                     self.streaming_word = delta.content
                     self.answer_content_output_spread += delta.content
                     self.answer_content_updated_signal.emit(self.answer_content_output_spread)
-                    self.log_answer_content_updated_signal.emit(self.streaming_word)
         # print("=" * 20 + "完整思考过程" + "=" * 20 + "\n")
         # print(reasoning_content)
         # print("=" * 20 + "完整回复" + "=" * 20 + "\n")
         # print(answer_content)
-        self.judge_answer = False
-        self.judge_reason = False
+
+        self.log_answer_content_updated_signal.emit(self.answer_content_output_spread)
         self.finished_signal.emit()  # 发送完成思考和回答的信号
