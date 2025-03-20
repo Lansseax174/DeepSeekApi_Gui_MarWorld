@@ -29,11 +29,10 @@ class QuitButton(QWidget):
 class ModelAndApiSelectWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
+        self.text_edit = None
         self.setWindowTitle("模型和API选择")
         self.resize(500, 300)  # 设置子窗口的大小
-        self.init_ui()
 
-    def init_ui(self):
         # 创建一个中心部件
         central_widget = QWidget(self)
         self.setCentralWidget(central_widget)
@@ -71,10 +70,13 @@ class ModelAndApiSelectButton(QWidget):
         self.model_api_window = ModelAndApiSelectWindow(parent)
         self.model_api_window.show()
 
+
 class InputTextEditButton(QWidget):
-    def __init__(self):
+    def __init__(self, input_text_edit):
         super().__init__()
 
+        self.input_text = None
+        self.input_text_edit = input_text_edit
         QToolTip.setFont(QFont('SansSerif', 10))
         # QToolTip.setFont(QFont('华文琥珀', 10))
         # 创建QPushButton
@@ -93,4 +95,5 @@ class InputTextEditButton(QWidget):
         self.btn.setFixedSize(135, 60)
 
     def process_input_text(self):
-        print('aaaaaaa!')
+        self.input_text = self.input_text_edit.toPlainText()
+        print(self.input_text)
