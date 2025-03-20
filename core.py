@@ -5,7 +5,7 @@ from openai import OpenAI
 class CallAlibabaApi(QObject):
     # content_updated_signal = pyqtSignal(str)
     answer_content_updated_signal = pyqtSignal(str)  # 更新回答文本显示框的信号
-    reasoning_content_updated_signal = pyqtSignal(str)# 更新回答思考文本显示框的信号
+    reasoning_content_updated_signal = pyqtSignal(str)  # 更新回答思考文本显示框的信号
     log_reasoning_content_updated_signal = pyqtSignal(str)
     log_answer_content_updated_signal = pyqtSignal(str)
 
@@ -17,8 +17,10 @@ class CallAlibabaApi(QObject):
         self.streaming_word = ''
         self.reasoning_content_output_spread = '思考内容----\n'
         self.answer_content_output_spread = '回答内容----\n'
+        self.input_text = None
 
-    def call_alibaba_api(self):
+    def call_alibaba_api(self, input_text):
+        self.input_text = input_text
         # 初始化OpenAI客户端
         client = OpenAI(
             # 如果没有配置环境变量，请用百炼API Key替换：api_key="REMOVED_KEYxxx"
@@ -34,7 +36,7 @@ class CallAlibabaApi(QObject):
         completion = client.chat.completions.create(
             model="deepseek-r1",  # 此处以 deepseek-r1 为例，可按需更换模型名称
             messages=[
-                {"role": "user", "content": "你好"}
+                {"role": "user", "content": self.input_text}
             ],
             stream=True,
             # 解除以下注释会在最后一个chunk返回Token使用量
@@ -42,7 +44,8 @@ class CallAlibabaApi(QObject):
             #     "include_usage": True
             # }
         )
-
+        self.reasoning_content_output_spread = '\n'
+        self.answer_content_output_spread = '\n'
         print("\n" + "=" * 20 + "思考过程" + "=" * 20 + "\n")
 
         for chunk in completion:
@@ -76,10 +79,6 @@ class CallAlibabaApi(QObject):
                     if self.reason_log_judge > 0:
                         self.log_reasoning_content_updated_signal.emit(self.reasoning_content_output_spread)
                         self.reason_log_judge = 0
-        # print("=" * 20 + "完整思考过程" + "=" * 20 + "\n")
-        # print(reasoning_content)
-        # print("=" * 20 + "完整回复" + "=" * 20 + "\n")
-        # print(answer_content)
 
         self.log_answer_content_updated_signal.emit(self.answer_content_output_spread)
         self.finished_signal.emit()  # 发送完成思考和回答的信号

@@ -46,8 +46,6 @@ class WindowGui(QMainWindow):
         # 切换模型和api的窗口的打开按钮的实例化
         model_api_button = button.ModelAndApiSelectButton(self)
 
-
-
         # 初始化状态栏内容
         self.statusBar().showMessage('Ready.')
 
@@ -76,7 +74,7 @@ class WindowGui(QMainWindow):
         input_text_edit.setFixedSize(600, 200)
 
         # 实例化[发送]按钮, 同时将[input_text_edit]整个传给按钮
-        input_text_edit_button = button.InputTextEditButton(input_text_edit)
+        input_text_edit_button = button.InputTextEditButton(input_text_edit, self.api)
 
         # 最右侧按钮列表垂直布局
         button_container = QWidget()
@@ -85,7 +83,8 @@ class WindowGui(QMainWindow):
         button_layout.addWidget(quit_button)
         button_layout.addWidget(model_api_button)
         button_container.setLayout(button_layout)
-        # 设置按钮间距为 0，确保它们上下挨着
+
+        # 设置垂直布局👆👆👆按钮间距为 0，确保它们上下挨着
         button_layout.setSpacing(0)
 
         # 使用吊炸天的网格布局来管理元素大小和位置

@@ -2,6 +2,8 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QWidget, QToolTip, QPushButton, QApplication, QMainWindow, QVBoxLayout, QTextEdit
 
+from worker_thread import WorkerThread
+
 
 class QuitButton(QWidget):
 
@@ -70,11 +72,12 @@ class ModelAndApiSelectButton(QWidget):
         self.model_api_window = ModelAndApiSelectWindow(parent)
         self.model_api_window.show()
 
-
+# [发送]按钮功能
 class InputTextEditButton(QWidget):
-    def __init__(self, input_text_edit):
+    def __init__(self, input_text_edit, api):
         super().__init__()
 
+        self.api = api
         self.input_text = None
         self.input_text_edit = input_text_edit
         QToolTip.setFont(QFont('SansSerif', 10))
@@ -97,3 +100,7 @@ class InputTextEditButton(QWidget):
     def process_input_text(self):
         self.input_text = self.input_text_edit.toPlainText()
         print(self.input_text)
+
+        # 通过线程异步运行阿里云api的调用类
+        self.thread_caa = WorkerThread(self.api, self.input_text)
+        self.thread_caa.start()
