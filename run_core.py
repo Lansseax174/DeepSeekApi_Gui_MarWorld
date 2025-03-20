@@ -12,18 +12,17 @@ from log_dialogue import LogContext
 app = QApplication(sys.argv)
 
 # 实例化阿里云api的调用类
-call_alibaba_api = CallAlibabaApi()
+call_alibaba_api_instance = CallAlibabaApi()
 
 # 实例化一个log记录功能的对象
-log_object = LogContext(call_alibaba_api)
+log_object = LogContext(call_alibaba_api_instance)
 
 # 实例化整个窗口的GUI
-main_window = WindowGui(call_alibaba_api)
+main_window = WindowGui(call_alibaba_api_instance)
 main_window.show()
 
-
 # # 通过线程异步运行阿里云api的调用类
-# thread_caa = WorkerThread(call_alibaba_api)
+# thread_caa = WorkerThread(call_alibaba_api_instance)
 # thread_caa.start()
 
 # 启用事件循环,相当于可以智能的结束循环并退出程序的While True

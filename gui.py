@@ -46,9 +46,6 @@ class WindowGui(QMainWindow):
         # 切换模型和api的窗口的打开按钮的实例化
         model_api_button = button.ModelAndApiSelectButton(self)
 
-        # 发送输入框的内容给api
-        input_text_edit_button = button.InputTextEditButton()
-
         # 初始化状态栏内容
         self.statusBar().showMessage('Ready.')
 
@@ -69,21 +66,25 @@ class WindowGui(QMainWindow):
         self.timer.timeout.connect(self.update_time)
         self.timer.start(1000)
 
-        # 用户输入内容的文本框
+        # 用户输入内容的文本框,
         input_text_edit = QTextEdit()
         input_text_edit.setPlaceholderText("在这里输入内容...")
         input_text_edit.setFont(QFont("微软雅黑", 15))
         input_text_edit.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
         input_text_edit.setFixedSize(600, 200)
-        self.text = input_text_edit.toPlainText()
 
+        # 实例化[发送]按钮, 同时将[input_text_edit]整个传给按钮
+        input_text_edit_button = button.InputTextEditButton(input_text_edit, self.api)
+
+        # 最右侧按钮列表垂直布局
         button_container = QWidget()
         button_layout = QVBoxLayout()
         button_layout.addWidget(self.time_show)
         button_layout.addWidget(quit_button)
         button_layout.addWidget(model_api_button)
         button_container.setLayout(button_layout)
-        # 设置按钮间距为 0，确保它们上下挨着
+
+        # 设置垂直布局👆👆👆按钮间距为 0，确保它们上下挨着
         button_layout.setSpacing(0)
 
         # 使用吊炸天的网格布局来管理元素大小和位置
