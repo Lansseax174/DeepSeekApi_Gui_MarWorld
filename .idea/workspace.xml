@@ -9,7 +9,9 @@
       <change beforePath="$PROJECT_DIR$/LogDialogue/log.json" beforeDir="false" afterPath="$PROJECT_DIR$/LogDialogue/log.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/button.py" beforeDir="false" afterPath="$PROJECT_DIR$/button.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/chat_display_screen.py" beforeDir="false" afterPath="$PROJECT_DIR$/chat_display_screen.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core.py" beforeDir="false" afterPath="$PROJECT_DIR$/core.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gui.py" beforeDir="false" afterPath="$PROJECT_DIR$/gui.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/log_dialogue.py" beforeDir="false" afterPath="$PROJECT_DIR$/log_dialogue.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,7 +60,7 @@
     "Python.button.executor": "Run",
     "Python.chat_display_screen.executor": "Run",
     "Python.core.executor": "Run",
-    "Python.gui.executor": "Run",
+    "Python.gui.executor": "Debug",
     "Python.log_dialogue.executor": "Run",
     "Python.main.executor": "Run",
     "Python.run_core.executor": "Run",
@@ -150,5 +152,21 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/chat_display_screen.py</url>
+          <line>114</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/chat_display_screen.py</url>
+          <line>116</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

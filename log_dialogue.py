@@ -52,11 +52,22 @@ class LogContext:
         print('a')
 
     def log_call_alibaba_api(self, log_will_add):
+        global data
         try:
             with open(self.log_file, 'r', encoding='utf-8-sig') as log_file_object:
-                data = json.load(log_file_object)
+                content = log_file_object.read().strip()
+                if content:
+                    data = json.load(log_file_object)
+                else:
+                    print('json文件为空')
+                    data = {"dialogues": []}
+
         except FileNotFoundError:
             data = {"dialogues": []}
+        except json.JSONDecodeError as e:
+            print(f"JSON 解析错误: {e}")
+        except Exception as e:
+            print(f"发生了其他错误: {e}")
 
         if "dialogues" in data:
             data["dialogues"].extend(log_will_add)

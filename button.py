@@ -77,6 +77,7 @@ class InputTextEditButton(QWidget):
     def __init__(self, input_text_edit, api, chat_window):
         super().__init__()
 
+        self.thread_caa = None
         self.chat_window = chat_window
         self.api = api
         self.input_text = None
@@ -101,10 +102,9 @@ class InputTextEditButton(QWidget):
     def process_input_text(self):
         self.input_text = self.input_text_edit.toPlainText()
         print(self.input_text)
-        self.chat_window.text = self.input_text
-        self.chat_window.send_message()
-        # # 通过线程异步运行阿里云api的调用类
-        # self.thread_caa = WorkerThread(self.api, self.input_text)
-        # self.thread_caa.start()
+        self.chat_window.user_text = self.input_text
+        self.chat_window.send_message(self.input_text)
+        # 通过线程异步运行阿里云api的调用类
+        self.thread_caa = WorkerThread(self.api, self.input_text)
+        self.thread_caa.start()
 
-        return self.input_text

@@ -53,7 +53,7 @@ class WindowGui(QMainWindow):
 
         # 创建一个显示模型的回答内容的显示框
         self.make_text_show_answer_content()
-        chat_window = ChatWindow()
+        chat_window = ChatWindow(self.api)
         chat_window.setFixedSize(600, 400)
 
 

@@ -6,8 +6,12 @@ class CallAlibabaApi(QObject):
     # content_updated_signal = pyqtSignal(str)
     answer_content_updated_signal = pyqtSignal(str)  # 更新回答文本显示框的信号
     reasoning_content_updated_signal = pyqtSignal(str)  # 更新回答思考文本显示框的信号
-    log_reasoning_content_updated_signal = pyqtSignal(str)
-    log_answer_content_updated_signal = pyqtSignal(str)
+    log_reasoning_content_updated_signal = pyqtSignal(str)  # 将reasoning写入log的信号
+    log_answer_content_updated_signal = pyqtSignal(str)  # 将answer写入log的信号
+    start_reason = pyqtSignal()
+    stop_reason = pyqtSignal()
+    start_answer = pyqtSignal()
+    stop_answer = pyqtSignal()
 
     finished_signal = pyqtSignal()
 
@@ -47,7 +51,7 @@ class CallAlibabaApi(QObject):
         self.reasoning_content_output_spread = '\n'
         self.answer_content_output_spread = '\n'
         print("\n" + "=" * 20 + "思考过程" + "=" * 20 + "\n")
-
+        self.start_reason.emit()
         for chunk in completion:
             # 如果chunk.choices为空，则打印usage
             if not chunk.choices:
@@ -69,6 +73,8 @@ class CallAlibabaApi(QObject):
                     # 开始回复
                     if delta.content != "" and is_answering is False:
                         print("\n" + "=" * 20 + "完整回复" + "=" * 20 + "\n")
+                        self.stop_reason.emit()
+                        self.start_answer.emit()
                         is_answering = True
                     # 打印回复过程
                     print(delta.content, end='', flush=True)
@@ -80,5 +86,6 @@ class CallAlibabaApi(QObject):
                         self.log_reasoning_content_updated_signal.emit(self.reasoning_content_output_spread)
                         self.reason_log_judge = 0
 
+        self.stop_answer.emit()
         self.log_answer_content_updated_signal.emit(self.answer_content_output_spread)
         self.finished_signal.emit()  # 发送完成思考和回答的信号
