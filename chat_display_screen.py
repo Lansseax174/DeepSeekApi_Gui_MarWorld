@@ -23,11 +23,12 @@ class ChatBubble(QWidget):
         message = QLabel(text)
         message.setWordWrap(True)  # 自动换行true
         message.setStyleSheet(
-            f"background-color: {'#a0cfff' if align == 'right' else '#d3d3d3'};"
-            "padding: 8px; border-radius: 8px; font-size: 14px;"
+            f"background-color: {'rgb(158, 234, 106)' if align == 'right' else 'rgb(225, 225, 225)'};"
+            f"color: { 'rgb(0, 0, 0)' if align == 'right' else 'rgb(0, 0, 0)'}"
+            "; padding: 8px; border-radius: 8px; font-size: 14px;"
         )  # 气泡设置
-        message.setMaximumSize(300, 400)  # 最大宽度和高度
-        message.setMinimumSize(30, 40)   # 最小高度
+        message.setMaximumSize(500, 1000)  # 最大宽度和高度
+        message.setMinimumSize(0, 0)   # 最小宽度和高度
 
         # 发送者名称显示
         sender_label = QLabel(f"{sender}")
@@ -62,9 +63,13 @@ class ChatWindow(QWidget):
         self.chat_list.setFixedSize(580, 400)
 
     def send_message(self):
-        text = 'aaaaaaaaaaaaaa'
+        text = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        text2 = 'bbb'
+
         if text:
             self.add_message('我', text, 'right', "my_avatar.png")
+        if text2:
+            self.add_message('你', text2, 'left', "my_avatar.png")
 
     def add_message(self, sender, text, align, avatar):
         # QListWidget中的一个项，承载具体的内容
