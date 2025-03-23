@@ -6,7 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="e488b08b-1d2e-4d4b-bd15-e3bbea24762f" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LogDialogue/log.json" beforeDir="false" afterPath="$PROJECT_DIR$/LogDialogue/log.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/button.py" beforeDir="false" afterPath="$PROJECT_DIR$/button.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/chat_display_screen.py" beforeDir="false" afterPath="$PROJECT_DIR$/chat_display_screen.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui.py" beforeDir="false" afterPath="$PROJECT_DIR$/gui.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,7 +71,7 @@
     "settings.editor.selected.configurable": "preferences.pluginManager"
   }
 }]]></component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.gui">
     <configuration name="gui" type="PythonConfigurationType" factoryName="Python">
       <module name="DeepSeekApi_Gui_MarWorld" />
       <option name="ENV_FILES" value="" />

@@ -27,7 +27,9 @@ class ChatBubble(QWidget):
             f"color: { 'rgb(0, 0, 0)' if align == 'right' else 'rgb(0, 0, 0)'}"
             "; padding: 8px; border-radius: 8px; font-size: 14px;"
         )  # 气泡设置
-        message.setMaximumSize(500, 1000)  # 最大宽度和高度
+        # 让气泡内的文本可以被选中操作
+        message.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
+        message.setMaximumSize(500, 500)  # 最大宽度和高度
         message.setMinimumSize(0, 0)   # 最小宽度和高度
 
         # 发送者名称显示
@@ -55,21 +57,22 @@ class ChatWindow(QWidget):
     def __init__(self):
         super().__init__()
 
+        self.text = None
+        self.text2 = None
         self.setWindowTitle("类Wechat窗口")
-        self.setGeometry(100, 100, 600, 500)  # x位置,y位置，宽度，高度
 
         # 聊天记录窗口
         self.chat_list = QListWidget(self)
-        self.chat_list.setFixedSize(580, 400)
+        self.chat_list.setFixedSize(600, 400)
 
     def send_message(self):
-        text = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-        text2 = 'bbb'
+        # text = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        self.text2 = 'bbb'
 
-        if text:
-            self.add_message('我', text, 'right', "my_avatar.png")
-        if text2:
-            self.add_message('你', text2, 'left', "my_avatar.png")
+        if self.text:
+            self.add_message('我', self.text, 'right', "my_avatar.png")
+        if self.text2:
+            self.add_message('你', self.text2, 'left', "my_avatar.png")
 
     def add_message(self, sender, text, align, avatar):
         # QListWidget中的一个项，承载具体的内容
@@ -81,9 +84,9 @@ class ChatWindow(QWidget):
         self.chat_list.setItemWidget(item, chat_bubble)  # 使每一个item显示为chat_bubble组件，而不是静态文本
         self.chat_list.scrollToBottom() # 当有新内容加入时，自动滚动到底部
 
-app = QApplication(sys.argv)
-a = ChatWindow()
-a.send_message()
-a.show()
-
-sys.exit(app.exec())
+# app = QApplication(sys.argv)
+# a = ChatWindow()
+# a.send_message()
+# a.show()
+#
+# sys.exit(app.exec())

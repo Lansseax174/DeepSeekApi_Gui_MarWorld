@@ -4,6 +4,8 @@ from PyQt6.QtWidgets import QWidget, QTextEdit, QGridLayout, QMainWindow, QVBoxL
 from PyQt6.QtCore import QDate, QDateTime, Qt, QTime
 import button
 
+from chat_display_screen import ChatWindow
+
 
 class WindowGui(QMainWindow):
     def __init__(self, api):
@@ -51,6 +53,9 @@ class WindowGui(QMainWindow):
 
         # 创建一个显示模型的回答内容的显示框
         self.make_text_show_answer_content()
+        chat_window = ChatWindow()
+        chat_window.setFixedSize(600, 400)
+
 
         # 创建一个显示模型的思考内容的显示框
         self.make_text_show_reasoning_content()
@@ -74,7 +79,7 @@ class WindowGui(QMainWindow):
         input_text_edit.setFixedSize(600, 200)
 
         # 实例化[发送]按钮, 同时将[input_text_edit]整个传给按钮
-        input_text_edit_button = button.InputTextEditButton(input_text_edit, self.api)
+        input_text_edit_button = button.InputTextEditButton(input_text_edit, self.api, chat_window)
 
         # 最右侧按钮列表垂直布局
         button_container = QWidget()
@@ -89,7 +94,8 @@ class WindowGui(QMainWindow):
 
         # 使用吊炸天的网格布局来管理元素大小和位置
         layout = QGridLayout()
-        layout.addWidget(self.text_show_answer_content, 0, 0, Qt.AlignmentFlag.AlignLeft)
+        layout.addWidget(chat_window, 0, 0, Qt.AlignmentFlag.AlignLeft)
+        # layout.addWidget(self.text_show_answer_content, 0, 0, Qt.AlignmentFlag.AlignLeft)
         layout.addWidget(self.text_show_reasoning_content, 0, 1, 2, 1, Qt.AlignmentFlag.AlignTop)
         layout.addWidget(button_container, 0, 3, Qt.AlignmentFlag.AlignTop)
         layout.addWidget(input_text_edit, 1, 0, Qt.AlignmentFlag.AlignTop)
@@ -168,3 +174,4 @@ class WindowGui(QMainWindow):
         self.time_show.setFont(font)
 
         self.time_show.setText(self.show_text)
+
