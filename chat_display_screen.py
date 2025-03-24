@@ -31,7 +31,7 @@ class ChatBubble(QWidget):
         )  # 气泡设置
         # 让气泡内的文本可以被选中操作
         self.message.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
-        self.message.setMaximumSize(500, 500)  # 最大宽度和高度
+        self.message.setMaximumSize(5000, 5000)  # 最大宽度和高度
         self.message.setMinimumSize(0, 0)   # 最小宽度和高度
 
         # 发送者名称显示
@@ -105,7 +105,9 @@ class ChatWindow(QWidget):
     def update_stream_text(self, text):
         print("update_stream_text")
         if self.chat_bubble1:
-            self.update_text1(text)
+            current_text = self.chat_bubble1.message.text()
+            if text != current_text:  # 避免重复更新
+                self.update_text1(text)
 
 
     def allow_make_bubble(self):
@@ -113,5 +115,12 @@ class ChatWindow(QWidget):
         self.chat_bubble1 = None
 
     def update_text1(self, new_text):
-        self.chat_bubble1.message.setText(new_text)
-        print('update_text1')
+        if self.chat_bubble1:
+            self.chat_bubble1.message.setText(new_text)  # 更新文本
+            item = self.chat_list.item(self.chat_list.count() - 1)  # 获取最新消息的 item
+            if item:
+                item.setSizeHint(self.chat_bubble1.sizeHint())  # 重新调整大小
+            self.chat_list.scrollToBottom()  # 保持滚动到底部
+            self.chat_list.repaint()  # 强制 UI 更新
+            QApplication.processEvents()  # 处理事件，防止 UI 卡顿
+            print('update_text1')

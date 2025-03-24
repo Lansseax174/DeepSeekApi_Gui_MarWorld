@@ -52,12 +52,12 @@ class LogContext:
         print('a')
 
     def log_call_alibaba_api(self, log_will_add):
-        global data
+
         try:
             with open(self.log_file, 'r', encoding='utf-8-sig') as log_file_object:
                 content = log_file_object.read().strip()
                 if content:
-                    data = json.load(log_file_object)
+                    data = json.loads(content)
                 else:
                     print('json文件为空')
                     data = {"dialogues": []}
