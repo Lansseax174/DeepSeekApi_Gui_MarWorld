@@ -1,28 +1,28 @@
-import sys
-
+from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPixmap
-from PyQt6.QtCore import Qt, QMetaObject
-from PyQt6.QtWidgets import QWidget, QHBoxLayout, QLabel, QVBoxLayout, QListWidget, QApplication, QListWidgetItem
+from PyQt6.QtWidgets import QWidget, QHBoxLayout, QLabel, QVBoxLayout, QListWidget, QListWidgetItem, QSizePolicy
 
 
 class ChatBubble(QWidget):
-    def __init__(self, sender, text, align, avatar_path, api):
+    def __init__(self, sender, text, align, avatar_path, api, setting):
         super().__init__()
         self.text = text
         self.api = api
+        self.setting = setting
 
         layout = QHBoxLayout()
 
         # 头像
         avatar = QLabel(self)
         # 尺寸限制，保持比例，平滑缩放
-        set_avater = QPixmap(avatar_path).scaled(40, 40, Qt.AspectRatioMode.KeepAspectRatio,
+        set_avatar = QPixmap(avatar_path).scaled(40, 40, Qt.AspectRatioMode.KeepAspectRatio,
                                           Qt.TransformationMode.SmoothTransformation)
-        avatar.setPixmap(set_avater)
+        avatar.setPixmap(set_avatar)
         avatar.setFixedSize(40, 40)
 
         # 消息文本
         self.message = QLabel(text)
+        self.message.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
         self.message.setWordWrap(True)  # 自动换行true
         self.message.setStyleSheet(
             f"background-color: {'rgb(158, 234, 106)' if align == 'right' else 'rgb(225, 225, 225)'};"
@@ -31,8 +31,8 @@ class ChatBubble(QWidget):
         )  # 气泡设置
         # 让气泡内的文本可以被选中操作
         self.message.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
-        self.message.setMaximumSize(5000, 5000)  # 最大宽度和高度
-        self.message.setMinimumSize(0, 0)   # 最小宽度和高度
+        self.message.setMaximumSize(*self.setting.message_MaximumSize)  # 最大宽度和高度
+        self.message.setMinimumSize(*self.setting.message_MinimumSize)   # 最小宽度和高度
 
         # 发送者名称显示
         sender_label = QLabel(f"{sender}")
@@ -57,28 +57,24 @@ class ChatBubble(QWidget):
         self.setLayout(layout)
 
 
-
-
-
-
-
 class ChatWindow(QWidget):
 
-    def __init__(self, api):
+    def __init__(self, api, setting):
         super().__init__()
+        self.setting = setting
         self.user_make_bubble_judge = 0
-        self.assistant_answer_text = '1'
+        self.assistant_answer_text = ''
         self.api = api
-        self.api.start_reason.connect(self.send_assistant_message)
+        self.api.start_answer.connect(self.send_assistant_message)
         self.api.answer_content_updated_signal.connect(self.update_stream_text)
         self.api.stop_answer.connect(self.allow_make_bubble)
         self.chat_bubble1 = None
         self.user_text = None
         self.setWindowTitle("类Wechat窗口")
 
-        # 聊天记录窗口
+        # 聊天记录窗口创建
         self.chat_list = QListWidget(self)
-        self.chat_list.setFixedSize(600, 400)
+        self.chat_list.setMinimumSize(*self.setting.chat_window)
 
     def send_assistant_message(self):
         print('work3')
@@ -95,26 +91,21 @@ class ChatWindow(QWidget):
     def add_message(self, sender, text, align, avatar):
         # QListWidget中的一个项，承载具体的内容
         item = QListWidgetItem()
-        self.chat_bubble1 = ChatBubble(sender, text, align, avatar, self.api)
+        self.chat_bubble1 = ChatBubble(sender, text, align, avatar, self.api, self.setting)
         item.setSizeHint(self.chat_bubble1.sizeHint())  # 设置item显示的大小
         self.chat_list.addItem(item)  # 将item加入到chat_list
         self.chat_list.setItemWidget(item, self.chat_bubble1)  # 使每一个item显示为chat_bubble组件，而不是静态文本
+        self.chat_list.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+        self.chat_list.setVerticalScrollMode(QListWidget.ScrollMode.ScrollPerPixel)  # 让滚动条按像素平滑滚动
         self.chat_list.scrollToBottom() # 当有新内容加入时，自动滚动到底部
+        self.chat_list.repaint()  # 强制 UI 更新
         print('work2')
-
-    def update_stream_text(self, text):
-        print("update_stream_text")
-        if self.chat_bubble1:
-            current_text = self.chat_bubble1.message.text()
-            if text != current_text:  # 避免重复更新
-                self.update_text1(text)
-
 
     def allow_make_bubble(self):
         print('allow_make_bubble')
         self.chat_bubble1 = None
 
-    def update_text1(self, new_text):
+    def update_stream_text(self, new_text):
         if self.chat_bubble1:
             self.chat_bubble1.message.setText(new_text)  # 更新文本
             item = self.chat_list.item(self.chat_list.count() - 1)  # 获取最新消息的 item
@@ -122,5 +113,3 @@ class ChatWindow(QWidget):
                 item.setSizeHint(self.chat_bubble1.sizeHint())  # 重新调整大小
             self.chat_list.scrollToBottom()  # 保持滚动到底部
             self.chat_list.repaint()  # 强制 UI 更新
-            QApplication.processEvents()  # 处理事件，防止 UI 卡顿
-            print('update_text1')

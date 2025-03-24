@@ -8,20 +8,19 @@ from chat_display_screen import ChatWindow
 
 
 class WindowGui(QMainWindow):
-    def __init__(self, api):
+    def __init__(self, api, setting):
         super().__init__()
         # 定义一些后面要用的变量
+        self.setting = setting
         self.time_show = None
         self.text = None
         self.timer = None
         self.show_text = None
         self.button = None
-        self.text_show_answer_content = None
         self.text_show_reasoning_content = None
 
         self.api = api
         self.reasoning_text = self.api.reasoning_content_output_spread
-        self.answer_text = self.api.answer_content_output_spread
         self.init_window()
 
         # reasoning_content_updated_signal作为激活信号激活self.update_reasoning_text
@@ -36,8 +35,8 @@ class WindowGui(QMainWindow):
         self.api.finished_signal.connect(self.output_token_ends)
 
     def init_window(self):
-        self.resize(1000, 700)
-        self.move(550, 200)
+        self.resize(*self.setting.resize)  # 主窗口宽度和高度
+        self.move(*self.setting.move)  # 窗口打开时的位置，左上角是(0,0)
         # self.setFixedSize(300, 300)
 
         self.setWindowTitle("MarWorld")
@@ -52,9 +51,8 @@ class WindowGui(QMainWindow):
         self.statusBar().showMessage('Ready.')
 
         # 创建一个显示模型的回答内容的显示框
-        self.make_text_show_answer_content()
-        chat_window = ChatWindow(self.api)
-        chat_window.setFixedSize(600, 400)
+        chat_window = ChatWindow(self.api, self.setting)
+        chat_window.setFixedSize(*self.setting.chat_window)
 
 
         # 创建一个显示模型的思考内容的显示框
@@ -71,12 +69,12 @@ class WindowGui(QMainWindow):
         self.timer.timeout.connect(self.update_time)
         self.timer.start(1000)
 
-        # 用户输入内容的文本框,
+        # 用户输入内容的文本框
         input_text_edit = QTextEdit()
         input_text_edit.setPlaceholderText("在这里输入内容...")
         input_text_edit.setFont(QFont("微软雅黑", 15))
         input_text_edit.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
-        input_text_edit.setFixedSize(600, 200)
+        input_text_edit.setFixedSize(*self.setting.input_text_edit)
 
         # 实例化[发送]按钮, 同时将[input_text_edit]整个传给按钮
         input_text_edit_button = button.InputTextEditButton(input_text_edit, self.api, chat_window)
@@ -95,7 +93,6 @@ class WindowGui(QMainWindow):
         # 使用吊炸天的网格布局来管理元素大小和位置
         layout = QGridLayout()
         layout.addWidget(chat_window, 0, 0, Qt.AlignmentFlag.AlignLeft)
-        # layout.addWidget(self.text_show_answer_content, 0, 0, Qt.AlignmentFlag.AlignLeft)
         layout.addWidget(self.text_show_reasoning_content, 0, 1, 2, 1, Qt.AlignmentFlag.AlignTop)
         layout.addWidget(button_container, 0, 3, Qt.AlignmentFlag.AlignTop)
         layout.addWidget(input_text_edit, 1, 0, Qt.AlignmentFlag.AlignTop)
@@ -118,26 +115,17 @@ class WindowGui(QMainWindow):
         self.statusBar().showMessage('正在输出思考内容...')
 
     def update_answer_text(self, text):
-        self.answer_text = text
-        self.text_show_answer_content.setText(self.answer_text)
         self.statusBar().showMessage('正在输出回答内容...')
 
     def output_token_ends(self):
         self.statusBar().showMessage("Ready.")
-
-    def make_text_show_answer_content(self):
-        # 创建一个显示模型的回答内容的显示框
-        self.text_show_answer_content = QTextEdit()
-        self.text_show_answer_content.setText(self.answer_text)
-        self.text_show_answer_content.setReadOnly(True)  # 只读，不可输入内容
-        self.text_show_answer_content.setFixedSize(600, 430)
 
     def make_text_show_reasoning_content(self):
         # 创建一个显示模型的思考内容的显示框
         self.text_show_reasoning_content = QTextEdit()
         self.text_show_reasoning_content.setText(self.reasoning_text)
         self.text_show_reasoning_content.setReadOnly(True)  # 只读，不可输入内容
-        self.text_show_reasoning_content.setFixedSize(300, 700)
+        self.text_show_reasoning_content.setFixedSize(*self.setting.text_show_reasoning_content)
 
     def make_time_show(self):
         date = QDate.currentDate()
