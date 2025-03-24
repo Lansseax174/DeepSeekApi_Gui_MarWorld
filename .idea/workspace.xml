@@ -4,15 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e488b08b-1d2e-4d4b-bd15-e3bbea24762f" name="更改" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LogDialogue/log.json" beforeDir="false" afterPath="$PROJECT_DIR$/LogDialogue/log.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/button.py" beforeDir="false" afterPath="$PROJECT_DIR$/button.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/chat_display_screen.py" beforeDir="false" afterPath="$PROJECT_DIR$/chat_display_screen.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core.py" beforeDir="false" afterPath="$PROJECT_DIR$/core.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gui.py" beforeDir="false" afterPath="$PROJECT_DIR$/gui.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/log_dialogue.py" beforeDir="false" afterPath="$PROJECT_DIR$/log_dialogue.py" afterDir="false" />
-    </list>
+    <list default="true" id="e488b08b-1d2e-4d4b-bd15-e3bbea24762f" name="更改" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -60,7 +52,7 @@
     "Python.button.executor": "Run",
     "Python.chat_display_screen.executor": "Run",
     "Python.core.executor": "Run",
-    "Python.gui.executor": "Debug",
+    "Python.gui.executor": "Run",
     "Python.log_dialogue.executor": "Run",
     "Python.main.executor": "Run",
     "Python.run_core.executor": "Run",
