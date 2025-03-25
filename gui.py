@@ -11,6 +11,8 @@ class WindowGui(QMainWindow):
     def __init__(self, api, setting):
         super().__init__()
         # 定义一些后面要用的变量
+        self.input_text_edit_button = None
+        self.input_text_edit = None
         self.setting = setting
         self.time_show = None
         self.text = None
@@ -70,14 +72,15 @@ class WindowGui(QMainWindow):
         self.timer.start(1000)
 
         # 用户输入内容的文本框
-        input_text_edit = QTextEdit()
-        input_text_edit.setPlaceholderText("在这里输入内容...")
-        input_text_edit.setFont(QFont("微软雅黑", 15))
-        input_text_edit.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
-        input_text_edit.setFixedSize(*self.setting.input_text_edit)
+        self.input_text_edit = QTextEdit()
+        self.input_text_edit.installEventFilter(self)
+        self.input_text_edit.setPlaceholderText("在这里输入内容...")
+        self.input_text_edit.setFont(QFont("微软雅黑", 15))
+        self.input_text_edit.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+        self.input_text_edit.setFixedSize(*self.setting.input_text_edit)
 
         # 实例化[发送]按钮, 同时将[input_text_edit]整个传给按钮
-        input_text_edit_button = button.InputTextEditButton(input_text_edit, self.api, chat_window)
+        self.input_text_edit_button = button.InputTextEditButton(self.input_text_edit, self.api, chat_window)
 
         # 最右侧按钮列表垂直布局
         button_container = QWidget()
@@ -95,11 +98,11 @@ class WindowGui(QMainWindow):
         layout.addWidget(chat_window, 0, 0, Qt.AlignmentFlag.AlignLeft)
         layout.addWidget(self.text_show_reasoning_content, 0, 1, 2, 1, Qt.AlignmentFlag.AlignTop)
         layout.addWidget(button_container, 0, 3, Qt.AlignmentFlag.AlignTop)
-        layout.addWidget(input_text_edit, 1, 0, Qt.AlignmentFlag.AlignTop)
-        layout.addWidget(input_text_edit_button, 1, 0, Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignRight)
+        layout.addWidget(self.input_text_edit, 1, 0, Qt.AlignmentFlag.AlignTop)
+        layout.addWidget(self.input_text_edit_button, 1, 0, Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignRight)
         # 防止AlignmentFlag.AlignLeft导致quit_button的大小被挤成0,0直接vanish
         quit_button.setMinimumSize(135, 60)
-        input_text_edit_button.setMinimumSize(135,60)
+        self.input_text_edit_button.setMinimumSize(135,60)
         model_api_button.setMinimumSize(100, 50)
 
         # 使用QWidet来设置布局
@@ -124,6 +127,7 @@ class WindowGui(QMainWindow):
         # 创建一个显示模型的思考内容的显示框
         self.text_show_reasoning_content = QTextEdit()
         self.text_show_reasoning_content.setText(self.reasoning_text)
+        self.text_show_reasoning_content.setFont(QFont(""))
         self.text_show_reasoning_content.setReadOnly(True)  # 只读，不可输入内容
         self.text_show_reasoning_content.setFixedSize(*self.setting.text_show_reasoning_content)
 
@@ -163,3 +167,9 @@ class WindowGui(QMainWindow):
 
         self.time_show.setText(self.show_text)
 
+    def eventFilter(self, obj, event):
+        if obj == self.input_text_edit and event.type() == event.Type.KeyPress:
+            if event.key() in (Qt.Key.Key_Return, Qt.Key.Key_Enter):
+                self.input_text_edit_button.process_input_text()
+                return True
+        return super().eventFilter(obj, event)

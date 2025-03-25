@@ -22,7 +22,6 @@ class ChatBubble(QWidget):
 
         # 消息文本
         self.message = QLabel(text)
-        self.message.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
         self.message.setWordWrap(True)  # 自动换行true
         self.message.setStyleSheet(
             f"background-color: {'rgb(158, 234, 106)' if align == 'right' else 'rgb(225, 225, 225)'};"
