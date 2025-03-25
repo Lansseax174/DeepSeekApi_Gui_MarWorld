@@ -168,8 +168,15 @@ class WindowGui(QMainWindow):
         self.time_show.setText(self.show_text)
 
     def eventFilter(self, obj, event):
+        # 检测文本框是否有内容和是否有按键判定
         if obj == self.input_text_edit and event.type() == event.Type.KeyPress:
+            # 判定按键
             if event.key() in (Qt.Key.Key_Return, Qt.Key.Key_Enter):
-                self.input_text_edit_button.process_input_text()
-                return True
+                # Shift+Enter 换行,只按下Enter则发送文本
+                if event.modifiers() == Qt.KeyboardModifier.ShiftModifier:
+                    self.input_text_edit.insertPlainText("\n")
+                    return True
+                else:
+                    self.input_text_edit_button.process_input_text()
+                    return True
         return super().eventFilter(obj, event)

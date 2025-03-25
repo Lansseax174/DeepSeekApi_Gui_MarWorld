@@ -76,12 +76,10 @@ class ChatWindow(QWidget):
         self.chat_list.setMinimumSize(*self.setting.chat_window)
 
     def send_assistant_message(self):
-        print('work3')
         self.add_message('DeepSeek', self.assistant_answer_text, 'left', "my_avatar.png")
 
     def send_message(self, text):
         self.user_text = text
-        print('work1')
         if self.user_text:
             self.user_make_bubble_judge = 1
             self.add_message('我', self.user_text, 'right', "my_avatar.png")
@@ -98,7 +96,6 @@ class ChatWindow(QWidget):
         self.chat_list.setVerticalScrollMode(QListWidget.ScrollMode.ScrollPerPixel)  # 让滚动条按像素平滑滚动
         self.chat_list.scrollToBottom() # 当有新内容加入时，自动滚动到底部
         self.chat_list.repaint()  # 强制 UI 更新
-        print('work2')
 
     def allow_make_bubble(self):
         print('allow_make_bubble')
