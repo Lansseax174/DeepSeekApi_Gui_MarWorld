@@ -138,7 +138,7 @@ class WindowGui(QMainWindow):
     def make_dialogueID_window(self):
         # 创建显示本次对话的ID的显示窗口
         self.dialogueID_window = QTextEdit()
-        temp_text = '本次对话ID:' + '\n' + str(self.dialogue_id1.dialogue_id)
+        temp_text = '当前对话ID:' + '\n' + str(self.dialogue_id1.dialogue_id)
         self.dialogueID_window.setText(temp_text)
         self.dialogueID_window.setReadOnly(True)
         self.dialogueID_window.setFont(QFont(*self.setting.dialogueID_window_Font))
