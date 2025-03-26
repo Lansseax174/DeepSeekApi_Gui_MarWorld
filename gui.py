@@ -8,9 +8,11 @@ from chat_display_screen import ChatWindow
 
 
 class WindowGui(QMainWindow):
-    def __init__(self, api, setting):
+    def __init__(self, api, setting, log_object, dialogue_id1):
         super().__init__()
         # 定义一些后面要用的变量
+        self.dialogueID_window = None
+        self.log_object = log_object
         self.input_text_edit_button = None
         self.input_text_edit = None
         self.setting = setting
@@ -21,6 +23,7 @@ class WindowGui(QMainWindow):
         self.button = None
         self.text_show_reasoning_content = None
 
+        self.dialogue_id1 = dialogue_id1
         self.api = api
         self.reasoning_text = self.api.reasoning_content_output_spread
         self.init_window()
@@ -60,6 +63,12 @@ class WindowGui(QMainWindow):
         # 创建一个显示模型的思考内容的显示框
         self.make_text_show_reasoning_content()
 
+        # 创建用户输入内容的文本框
+        self.make_input_text_edit()
+
+        # 创建显示本次对话的ID的显示窗口
+        self.make_dialogueID_window()
+
         # 创建一个显示时间的显示框
         self.make_time_show()
 
@@ -71,21 +80,16 @@ class WindowGui(QMainWindow):
         self.timer.timeout.connect(self.update_time)
         self.timer.start(1000)
 
-        # 用户输入内容的文本框
-        self.input_text_edit = QTextEdit()
-        self.input_text_edit.installEventFilter(self)
-        self.input_text_edit.setPlaceholderText("在这里输入内容...")
-        self.input_text_edit.setFont(QFont("微软雅黑", 15))
-        self.input_text_edit.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
-        self.input_text_edit.setFixedSize(*self.setting.input_text_edit)
 
         # 实例化[发送]按钮, 同时将[input_text_edit]整个传给按钮
-        self.input_text_edit_button = button.InputTextEditButton(self.input_text_edit, self.api, chat_window)
+        self.input_text_edit_button = button.InputTextEditButton(
+            self.input_text_edit, self.api, chat_window, self.log_object)
 
         # 最右侧按钮列表垂直布局
         button_container = QWidget()
         button_layout = QVBoxLayout()
         button_layout.addWidget(self.time_show)
+        button_layout.addWidget(self.dialogueID_window)
         button_layout.addWidget(quit_button)
         button_layout.addWidget(model_api_button)
         button_container.setLayout(button_layout)
@@ -124,12 +128,30 @@ class WindowGui(QMainWindow):
         self.statusBar().showMessage("Ready.")
 
     def make_text_show_reasoning_content(self):
-        # 创建一个显示模型的思考内容的显示框
+        # 创建一个显示模型的思考内容的显示窗口
         self.text_show_reasoning_content = QTextEdit()
         self.text_show_reasoning_content.setText(self.reasoning_text)
         self.text_show_reasoning_content.setFont(QFont(""))
         self.text_show_reasoning_content.setReadOnly(True)  # 只读，不可输入内容
         self.text_show_reasoning_content.setFixedSize(*self.setting.text_show_reasoning_content)
+
+    def make_dialogueID_window(self):
+        # 创建显示本次对话的ID的显示窗口
+        self.dialogueID_window = QTextEdit()
+        temp_text = '本次对话ID:' + '\n' + str(self.dialogue_id1.dialogue_id)
+        self.dialogueID_window.setText(temp_text)
+        self.dialogueID_window.setReadOnly(True)
+        self.dialogueID_window.setFont(QFont(*self.setting.dialogueID_window_Font))
+        self.dialogueID_window.setFixedSize(*self.setting.dialogueID_window)
+
+    def make_input_text_edit(self):
+        # 创建用户输入内容的文本框
+        self.input_text_edit = QTextEdit()
+        self.input_text_edit.installEventFilter(self)
+        self.input_text_edit.setPlaceholderText("在这里输入内容...")
+        self.input_text_edit.setFont(QFont("微软雅黑", 15))
+        self.input_text_edit.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+        self.input_text_edit.setFixedSize(*self.setting.input_text_edit)
 
     def make_time_show(self):
         date = QDate.currentDate()
@@ -144,7 +166,7 @@ class WindowGui(QMainWindow):
 
         self.time_show = QTextEdit()
         self.time_show.setReadOnly(True)
-        self.time_show.setFixedSize(133, 65)
+        self.time_show.setFixedSize(*self.setting.time_show_window)
 
         font = QFont("微软雅黑", 15)  # 设置字体为 Arial，大小为 12
         font.setBold(True)

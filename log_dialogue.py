@@ -1,16 +1,20 @@
 import json
+import os
 from typing import cast
 import time
 
+from dialogue_id import DialogueID
 
 class LogContext:
-    def __init__(self, api):
+    def __init__(self, api, dialogue_id1):
+        self.add_user_input_dictionary = None
         self.add_api_answer_dictionary = None
         self.add_api_reasoning_dictionary = None
         self.add_reason = 0
 
+        self.dialogue_id1 = dialogue_id1
         self.api = api
-        self.log_file = 'LogDialogue\log.json'
+        self.log_file = 'LogDialogue\DialogueContentLog\log.json'
 
         self.reasoning_content = ''
         self.answer_content = self.api.answer_content_output_spread
@@ -23,9 +27,9 @@ class LogContext:
         self.api.log_reasoning_content_updated_signal.connect(self.logging_api_reasoning_content)
         self.api.log_answer_content_updated_signal.connect(self.logging_api_answer_content)
         self.api.finished_signal.connect(self.finish_api_logging)
-    # def logging_user_content(self):
-    #
-    #
+
+        # 根据dialogue_id创建存储对话内容的Json文件
+        self.make_dialogue_log_json()
     def update_time(self):
         self.formatted_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
 
@@ -39,6 +43,7 @@ class LogContext:
                                              ]
 
         self.log_call_alibaba_api(self.add_api_reasoning_dictionary)
+
     def logging_api_answer_content(self, text):
         self.update_time()
         self.add_api_answer_dictionary = [
@@ -48,6 +53,17 @@ class LogContext:
                                            }
                                           ]
         self.log_call_alibaba_api(self.add_api_answer_dictionary)
+
+    def logging_user_input_content(self, text):
+        self.update_time()
+        self.add_user_input_dictionary = [
+                                           {"time": self.formatted_time,
+                                            "role": "user",
+                                            "content": text
+                                           }
+                                          ]
+        self.log_call_alibaba_api(self.add_user_input_dictionary)
+
     def finish_api_logging(self):
         print('a')
 
@@ -75,4 +91,16 @@ class LogContext:
             data["dialogues"] = log_will_add
         with open(self.log_file, 'w', encoding='utf-8-sig') as log_file_object:
             json.dump(data, cast("SupportsWrite[str]", log_file_object), ensure_ascii=False, indent=4)
+
+    def make_dialogue_log_json(self):
+        path = 'LogDialogue\DialogueContentLog'
+
+        # 创建多级目录，确保指定的文件夹存在，如果目录已经存在，则不会报错
+        os.makedirs(path, exist_ok=True)
+
+        json_filename = os.path.join(path, f"{self.dialogue_id1.dialogue_id}.json")
+        default_data = {"dialogues": []}
+
+        with open(json_filename, 'w', encoding='utf-8-sig') as log_file_object:
+            json.dump(default_data, cast("SupportsWrite[str]", log_file_object), ensure_ascii=False, indent=4)
 

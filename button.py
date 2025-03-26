@@ -1,9 +1,10 @@
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QWidget, QToolTip, QPushButton, QApplication, QMainWindow, QVBoxLayout, QTextEdit
-
+from settings import Setting
 from worker_thread import WorkerThread
 
+setting = Setting()
 
 class QuitButton(QWidget):
 
@@ -16,7 +17,7 @@ class QuitButton(QWidget):
         self.btn = QPushButton('退出MarWorld', self)
 
         # 字体设置为Arial，大小为14
-        self.btn.setFont(QFont('华文琥珀', 15))
+        self.btn.setFont(QFont(*setting.quit_button_Font))
 
         # 绑定按钮作用
         self.btn.clicked.connect(QApplication.quit)
@@ -25,7 +26,7 @@ class QuitButton(QWidget):
         self.btn.setToolTip('退出按钮')
 
         # 设置按钮固定大小
-        self.btn.setFixedSize(135, 60)
+        self.btn.setFixedSize(*setting.quit_button)
 
 
 class ModelAndApiSelectWindow(QMainWindow):
@@ -33,7 +34,7 @@ class ModelAndApiSelectWindow(QMainWindow):
         super().__init__(parent)
         self.text_edit = None
         self.setWindowTitle("模型和API选择")
-        self.resize(500, 300)  # 设置子窗口的大小
+        self.resize(*setting.model_api_select_window)  # 设置子窗口的大小
 
         # 创建一个中心部件
         central_widget = QWidget(self)
@@ -65,7 +66,7 @@ class ModelAndApiSelectButton(QWidget):
         font = QFont('华文琥珀', 13)  # 字体设置为Arial，大小为14
         self.btn.setFont(font)
         self.btn.clicked.connect(self.open_model_api_window)
-        self.btn.setFixedSize(100, 50)
+        self.btn.setFixedSize(*setting.model_api_select_button)
 
     def open_model_api_window(self):
         parent = self.parent()
@@ -74,9 +75,9 @@ class ModelAndApiSelectButton(QWidget):
 
 # [发送]按钮功能
 class InputTextEditButton(QWidget):
-    def __init__(self, input_text_edit, api, chat_window):
+    def __init__(self, input_text_edit, api, chat_window, log_object):
         super().__init__()
-
+        self.log_object = log_object
         self.thread_caa = None
         self.chat_window = chat_window
         self.api = api
@@ -88,7 +89,7 @@ class InputTextEditButton(QWidget):
         self.btn = QPushButton('发送', self)
 
         # 字体设置为Arial，大小为14
-        self.btn.setFont(QFont('华文琥珀', 15))
+        self.btn.setFont(QFont(*setting.input_text_edit_button_Font))
 
         # 绑定按钮作用
         self.btn.clicked.connect(self.process_input_text)
@@ -97,15 +98,17 @@ class InputTextEditButton(QWidget):
         self.btn.setToolTip('man!')
 
         # 设置按钮固定大小
-        self.btn.setFixedSize(135, 60)
+        self.btn.setFixedSize(*setting.input_text_edit_button)
 
     def process_input_text(self):
         self.input_text = self.input_text_edit.toPlainText()
-        self.input_text_edit.clear()
-        print(self.input_text)
+        self.log_object.logging_user_input_content(self.input_text)
         self.chat_window.user_text = self.input_text
         self.chat_window.send_message(self.input_text)
+
         # 通过线程异步运行阿里云api的调用类
         # self.thread_caa = WorkerThread(self.api, self.input_text)
         # self.thread_caa.start()
         #
+        print(self.input_text)
+        self.input_text_edit.clear()
