@@ -107,8 +107,8 @@ class InputTextEditButton(QWidget):
         self.chat_window.send_message(self.input_text)
 
         # 通过线程异步运行阿里云api的调用类
-        # self.thread_caa = WorkerThread(self.api, self.input_text)
-        # self.thread_caa.start()
-        #
+        self.thread_caa = WorkerThread(self.api, self.input_text)
+        self.thread_caa.start()
+
         print(self.input_text)
         self.input_text_edit.clear()

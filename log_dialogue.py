@@ -66,7 +66,7 @@ class LogContext:
         self.log_call_alibaba_api(self.add_user_input_dictionary)
 
     def finish_api_logging(self):
-        print('a')
+        print('finish_api_log')
 
     def log_call_alibaba_api(self, log_will_add):
 

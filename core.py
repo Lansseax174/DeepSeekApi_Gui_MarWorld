@@ -17,7 +17,7 @@ class CallAlibabaApi(QObject):
         super().__init__()
         self.reason_log_judge = 0
         self.streaming_word = ''
-        self.reasoning_content_output_spread = '啊啊啊啊'  # 传参,思考内容
+        self.reasoning_content_output_spread = '-' * 40 + '思考内容' + '-' * 40 + '\n\n'  # 传参,思考内容
         self.answer_content_output_spread = ''  # 传参，回答内容
         self.input_text = None  # user输入的内容
 
