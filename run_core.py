@@ -1,13 +1,12 @@
 import sys
+
 from PyQt6.QtWidgets import QApplication
 
-
-from worker_thread import WorkerThread
 from core import CallAlibabaApi
+from dialogue_id import DialogueID
 from gui import WindowGui
 from log_dialogue import LogContext
 from settings import Setting
-from dialogue_id import DialogueID
 
 setting = Setting()
 

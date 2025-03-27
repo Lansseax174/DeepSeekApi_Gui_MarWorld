@@ -17,7 +17,8 @@ class CallAlibabaApi(QObject):
         super().__init__()
         self.reason_log_judge = 0
         self.streaming_word = ''
-        self.reasoning_content_output_spread = '-' * 40 + '思考内容' + '-' * 40 + '\n\n'  # 传参,思考内容
+        self.reason_content_default = '-' * 40 + '思考内容' + '-' * 40 + '\n\n'
+        self.reasoning_content_output_spread = self.reason_content_default # 传参,思考内容
         self.answer_content_output_spread = ''  # 传参，回答内容
         self.input_text = None  # user输入的内容
 
@@ -47,6 +48,7 @@ class CallAlibabaApi(QObject):
             # }
         )
         print("\n" + "=" * 20 + "思考过程" + "=" * 20 + "\n")
+        self.reasoning_content_output_spread = self.reason_content_default
         self.start_reason.emit()
         for chunk in completion:
             # 如果chunk.choices为空，则打印usage

@@ -5,7 +5,7 @@ class Setting:
         self.resize = (1500, 900)
 
         # 窗口打开时的x和y轴的位置，左上角是(0,0)坐标
-        self.move = (350, 100)
+        self.move = (25, 100)
 
         # 用户输入文本框-宽度,高度
         self.input_text_edit = (900, 220)

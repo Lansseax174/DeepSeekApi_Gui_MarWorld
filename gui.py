@@ -5,12 +5,13 @@ from PyQt6.QtCore import QDate, QDateTime, Qt, QTime
 import button
 
 from chat_display_screen import ChatWindow
-
+from dialogue_id_list_window import DialogueIdListWinodw
 
 class WindowGui(QMainWindow):
     def __init__(self, api, setting, log_object, dialogue_id1):
         super().__init__()
         # 定义一些后面要用的变量
+        self.dialogue_list = None
         self.dialogueID_window = None
         self.log_object = log_object
         self.input_text_edit_button = None
@@ -69,6 +70,9 @@ class WindowGui(QMainWindow):
         # 创建显示本次对话的ID的显示窗口
         self.make_dialogueID_window()
 
+        # 创建显示所有对话列表的窗口
+        self.dialogue_list = DialogueIdListWinodw()
+
         # 创建一个显示时间的显示框
         self.make_time_show()
 
@@ -98,14 +102,17 @@ class WindowGui(QMainWindow):
         button_layout.setSpacing(0)
 
         # 使用吊炸天的网格布局来管理元素大小和位置
-        layout = QGridLayout()
-        layout.addWidget(chat_window, 0, 0, Qt.AlignmentFlag.AlignLeft)
-        layout.addWidget(self.text_show_reasoning_content, 0, 1, 2, 1, Qt.AlignmentFlag.AlignTop)
+        layout = QGridLayout()  # ...(添加对象,Y轴,X轴)
+        layout.addWidget(self.dialogue_list, 0, 0, 2, 1,Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
+        layout.addWidget(chat_window, 0, 1, Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
+        layout.addWidget(self.text_show_reasoning_content, 0, 2, 2, 1, Qt.AlignmentFlag.AlignTop)
         layout.addWidget(button_container, 0, 3, Qt.AlignmentFlag.AlignTop)
-        layout.addWidget(self.input_text_edit, 1, 0, Qt.AlignmentFlag.AlignTop)
-        layout.addWidget(self.input_text_edit_button, 1, 0, Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignRight)
+        layout.addWidget(self.input_text_edit, 1, 1, Qt.AlignmentFlag.AlignTop)
+        layout.addWidget(self.input_text_edit_button, 1, 1, Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignRight)
+
         # 防止AlignmentFlag.AlignLeft导致quit_button的大小被挤成0,0直接vanish
         quit_button.setMinimumSize(135, 60)
+        self.dialogue_list.setFixedSize(200,830)
         self.input_text_edit_button.setMinimumSize(135,60)
         model_api_button.setMinimumSize(100, 50)
 
