@@ -16,7 +16,7 @@ class LogContext:
         self.dialogue_id1 = dialogue_id1
         self.api = api
         self.log_file = os.path.join(
-            'LogDialogue','DialogueContentLog',f'{self.dialogue_id1.dialogue_id}.json')
+            'LogDialogue','DialogueContentLog', f'{self.dialogue_id1.dialogue_id}.json')
 
         self.reasoning_content = ''
         self.answer_content = self.api.answer_content_output_spread
@@ -39,6 +39,7 @@ class LogContext:
         self.add_api_reasoning_dictionary = [
                                              {"time": self.formatted_time,
                                               "role": "assistant",
+                                              "type": "reasoning",
                                               "content": text
                                               }
                                              ]
@@ -50,6 +51,7 @@ class LogContext:
         self.add_api_answer_dictionary = [
                                            {"time": self.formatted_time,
                                             "role": "assistant",
+                                            "type": "answer",
                                             "content": text
                                            }
                                           ]
