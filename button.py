@@ -100,6 +100,7 @@ class InputTextEditButton(QWidget):
         # 设置按钮固定大小
         self.btn.setFixedSize(*setting.input_text_edit_button)
 
+
     def process_input_text(self):
         self.input_text = self.input_text_edit.toPlainText()
         self.log_object.logging_user_input_content(self.input_text)
@@ -112,3 +113,27 @@ class InputTextEditButton(QWidget):
 
         print(self.input_text)
         self.input_text_edit.clear()
+
+# [新聊天]按钮功能
+class MakeNewChatButton(QWidget):
+    def __init__(self):
+        super().__init__()
+        QToolTip.setFont(QFont('SansSerif', 10))
+        # QToolTip.setFont(QFont('华文琥珀', 10))
+        # 创建QPushButton
+        self.btn = QPushButton('新聊天', self)
+
+        # 字体设置为Arial，大小为14
+        self.btn.setFont(QFont(*setting.input_text_edit_button_Font))
+
+        # 绑定按钮作用
+        self.btn.clicked.connect(self.make_new_chat)
+        self.btn.setShortcut("创建新的聊天")
+        # 鼠标挪上去显示个提示
+        self.btn.setToolTip('man!what can I say?')
+
+        # 设置按钮固定大小
+        self.btn.setFixedSize(*setting.input_text_edit_button)
+
+    def make_new_chat(self):
+        print('创建新的聊天')

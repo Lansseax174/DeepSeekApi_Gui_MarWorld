@@ -13,7 +13,7 @@ class CallAlibabaApi(QObject):
     stop_answer = pyqtSignal()
     finished_signal = pyqtSignal()
 
-    def __init__(self, dialogue_id1):
+    def __init__(self):
         super().__init__()
         self.reason_log_judge = 0
         self.streaming_word = ''
@@ -21,7 +21,6 @@ class CallAlibabaApi(QObject):
         self.reasoning_content_output_spread = self.reason_content_default # 传参,思考内容
         self.answer_content_output_spread = ''  # 传参，回答内容
         self.input_text = None  # user输入的内容
-        self.dialogue_id1 = dialogue_id1
 
     def call_alibaba_api(self, input_text):
         self.input_text = input_text
@@ -35,9 +34,7 @@ class CallAlibabaApi(QObject):
         reasoning_content = ""  # 定义完整思考过程
         answer_content = ""  # 定义完整回复
         is_answering = False  # 判断是否结束思考过程并开始回复
-        with open(self.dialogue_id1.log_file, 'r', encoding='utf-8-sig') as log_file_object:
-            content = log_file_object.read().strip()
-            print('aadasda' + content)
+
         # 创建聊天完成请求
         completion = client.chat.completions.create(
             model="deepseek-r1",
