@@ -7,10 +7,12 @@ import button
 from chat_display_screen import ChatWindow
 from dialogue_id_list_window import DialogueIdListWinodw
 
+
 class WindowGui(QMainWindow):
     def __init__(self, api, setting, log_object, dialogue_id1):
         super().__init__()
         # 定义一些后面要用的变量
+        self.make_new_chat_button = None
         self.dialogue_list = None
         self.dialogueID_window = None
         self.log_object = log_object
@@ -47,6 +49,9 @@ class WindowGui(QMainWindow):
 
         self.setWindowTitle("MarWorld")
 
+        # 创建显示所有对话列表的窗口
+        self.dialogue_list = DialogueIdListWinodw()
+
         # 退出按钮实例化
         quit_button = button.QuitButton(self)
 
@@ -57,9 +62,8 @@ class WindowGui(QMainWindow):
         self.statusBar().showMessage('Ready.')
 
         # 创建一个显示模型的回答内容的显示框
-        chat_window = ChatWindow(self.api, self.setting)
+        chat_window = ChatWindow(self.api, self.setting, self.dialogue_id1, self.dialogue_list)
         chat_window.setFixedSize(*self.setting.chat_window)
-
 
         # 创建一个显示模型的思考内容的显示框
         self.make_text_show_reasoning_content()
@@ -69,9 +73,6 @@ class WindowGui(QMainWindow):
 
         # 创建显示本次对话的ID的显示窗口
         self.make_dialogueID_window()
-
-        # 创建显示所有对话列表的窗口
-        self.dialogue_list = DialogueIdListWinodw()
 
         # 创建一个显示时间的显示框
         self.make_time_show()
@@ -84,10 +85,12 @@ class WindowGui(QMainWindow):
         self.timer.timeout.connect(self.update_time)
         self.timer.start(1000)
 
-
         # 实例化[发送]按钮, 同时将[input_text_edit]整个传给按钮
         self.input_text_edit_button = button.InputTextEditButton(
             self.input_text_edit, self.api, chat_window, self.log_object)
+
+        # 实例化[新聊天]按钮
+        self.make_new_chat_button = button.MakeNewChatButton()
 
         # 最右侧按钮列表垂直布局
         button_container = QWidget()
@@ -103,17 +106,19 @@ class WindowGui(QMainWindow):
 
         # 使用吊炸天的网格布局来管理元素大小和位置
         layout = QGridLayout()  # ...(添加对象,Y轴,X轴)
-        layout.addWidget(self.dialogue_list, 0, 0, 2, 1,Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
+        layout.addWidget(self.dialogue_list, 0, 0, 2, 1, Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
         layout.addWidget(chat_window, 0, 1, Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
         layout.addWidget(self.text_show_reasoning_content, 0, 2, 2, 1, Qt.AlignmentFlag.AlignTop)
         layout.addWidget(button_container, 0, 3, Qt.AlignmentFlag.AlignTop)
         layout.addWidget(self.input_text_edit, 1, 1, Qt.AlignmentFlag.AlignTop)
         layout.addWidget(self.input_text_edit_button, 1, 1, Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignRight)
+        layout.addWidget(self.make_new_chat_button, 1, 1, Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignLeft)
 
         # 防止AlignmentFlag.AlignLeft导致quit_button的大小被挤成0,0直接vanish
         quit_button.setMinimumSize(135, 60)
-        self.dialogue_list.setFixedSize(200,830)
-        self.input_text_edit_button.setMinimumSize(135,60)
+        self.dialogue_list.setFixedSize(200, 830)
+        self.input_text_edit_button.setMinimumSize(135, 60)
+        self.make_new_chat_button.setMinimumSize(135, 60)
         model_api_button.setMinimumSize(100, 50)
 
         # 使用QWidet来设置布局
@@ -168,8 +173,6 @@ class WindowGui(QMainWindow):
         now_time = now_time.toString(Qt.DateFormat.RFC2822Date)
 
         self.show_text = date + '\n' + now_time
-
-
 
         self.time_show = QTextEdit()
         self.time_show.setReadOnly(True)

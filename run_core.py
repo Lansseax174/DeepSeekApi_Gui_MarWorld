@@ -17,7 +17,7 @@ app = QApplication(sys.argv)
 dialogue_id1 = DialogueID()
 
 # 实例化阿里云api的调用类
-call_alibaba_api_instance = CallAlibabaApi(dialogue_id1)
+call_alibaba_api_instance = CallAlibabaApi()
 
 # 实例化log记录功能对象
 log_object = LogContext(call_alibaba_api_instance, dialogue_id1)
