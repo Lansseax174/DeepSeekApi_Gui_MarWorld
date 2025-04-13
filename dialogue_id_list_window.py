@@ -1,3 +1,4 @@
+from datetime import datetime
 import os
 import json
 
@@ -15,7 +16,9 @@ class DialogueIdListWinodw(QWidget):
         super().__init__()
 
         self.dialogue_list = QListWidget()
-        self.load_dialogue_list()  # 载入魅力的json文件列表
+        # self.load_dialogue_list()
+        # 载入魅力的json文件列表 (注释化，丢到chat_display_screen.py里运行这一行了，
+        # 因为self.on_item_clicked(self.dialogue_list.item(0))这一行导致的
 
         layout = QVBoxLayout(self)
         layout.addWidget(self.dialogue_list)
@@ -29,9 +32,30 @@ class DialogueIdListWinodw(QWidget):
             os.makedirs(dialogue_content_log)
             print('存储对话log文件的目录不存在')
 
-        for file in os.listdir(dialogue_content_log):
-            if file.endswith(".json"):
-                self.dialogue_list.addItem(file[:-5])
+        # 获取所有 Json文件的文件名(不包括路径)
+        json_files = [
+            file for file in os.listdir(dialogue_content_log)
+            if file.endswith(".json")
+        ]
+
+        # json_files排序.key = lambda 建立一个匿名函数 获取 file文件的时间戳来排序，reverse决定排序顺序是正还是反
+        json_files.sort(key = lambda file: os.path.getmtime(os.path.join(dialogue_content_log, file))
+                        ,reverse = True)
+
+        # for file in json_files:
+        #     self.dialogue_list.addItem(file[:-5])
+        for file in json_files:
+            # 去掉文件名后5个字符(既.json)
+            read_file_name = file[6:-5]
+
+            timestamp = os.path.getmtime(os.path.join(dialogue_content_log,file))
+
+            read_time = datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
+
+            self.dialogue_list.addItem(f"{read_file_name} ({read_time})")
+
+        self.dialogue_list.setCurrentItem(self.dialogue_list.item(0))
+        self.on_item_clicked(self.dialogue_list.item(0))
 
     def load_dialogues_from_json(self):
         try:
@@ -43,7 +67,6 @@ class DialogueIdListWinodw(QWidget):
             for dialogue in dialogues:
                 text = dialogue["content"]
                 type = dialogue["type"]
-                print('0')
                 if type == "user":
                     self.chat_bubble_add_user.emit(text)
                 elif type == "answer":
@@ -56,7 +79,8 @@ class DialogueIdListWinodw(QWidget):
     def on_item_clicked(self, item):
         self.selected_filename = item.text()
         # 获取点中的文件的文件名
-        self.selected_file_path = os.path.join('LogDialogue', 'DialogueContentLog', f"{self.selected_filename}.json")
+        self.selected_file_path = os.path.join(
+            'LogDialogue', 'DialogueContentLog', f"000000{self.selected_filename[:-22]}.json")
 
         with open(self.selected_file_path, 'r', encoding='utf-8-sig') as log_file_object:
             self.data = json.load(log_file_object)

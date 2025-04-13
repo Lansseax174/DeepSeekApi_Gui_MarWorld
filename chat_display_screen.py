@@ -81,6 +81,8 @@ class ChatWindow(QWidget):
         self.chat_list = QListWidget(self)
         self.chat_list.setMinimumSize(*self.setting.chat_window)
 
+        self.dialouge_list.load_dialogue_list()
+
     def clean_bubble(self):
         self.chat_list.clear()
     def send_assistant_message_from_dialogue_list(self, text):
@@ -111,6 +113,9 @@ class ChatWindow(QWidget):
         self.chat_list.setItemWidget(item, self.chat_bubble1)  # 使每一个item显示为chat_bubble组件，而不是静态文本
         self.chat_list.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
         self.chat_list.setVerticalScrollMode(QListWidget.ScrollMode.ScrollPerPixel)  # 让滚动条按像素平滑滚动
+        # 获取垂直滚动条
+        scroll_bar = self.chat_list.verticalScrollBar()
+        scroll_bar.setSingleStep(10)
         self.chat_list.scrollToBottom()  # 当有新内容加入时，自动滚动到底部
         self.chat_list.repaint()  # 强制 UI 更新
 
