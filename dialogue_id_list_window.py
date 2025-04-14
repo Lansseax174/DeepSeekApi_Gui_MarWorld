@@ -46,13 +46,13 @@ class DialogueIdListWinodw(QWidget):
         #     self.dialogue_list.addItem(file[:-5])
         for file in json_files:
             # 去掉文件名后5个字符(既.json)
-            read_file_name = file[6:-5]
+            read_file_name = file[0:-5]
 
             timestamp = os.path.getmtime(os.path.join(dialogue_content_log,file))
 
             read_time = datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
 
-            self.dialogue_list.addItem(f"{read_file_name} ({read_time})")
+            self.dialogue_list.addItem(f"{read_file_name}\n({read_time})")
 
         self.dialogue_list.setCurrentItem(self.dialogue_list.item(0))
         self.on_item_clicked(self.dialogue_list.item(0))
@@ -80,7 +80,7 @@ class DialogueIdListWinodw(QWidget):
         self.selected_filename = item.text()
         # 获取点中的文件的文件名
         self.selected_file_path = os.path.join(
-            'LogDialogue', 'DialogueContentLog', f"000000{self.selected_filename[:-22]}.json")
+            'LogDialogue', 'DialogueContentLog', f"{self.selected_filename[:-22]}.json")
 
         with open(self.selected_file_path, 'r', encoding='utf-8-sig') as log_file_object:
             self.data = json.load(log_file_object)
