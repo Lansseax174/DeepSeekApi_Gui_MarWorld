@@ -1,4 +1,4 @@
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QWidget, QToolTip, QPushButton, QApplication, QMainWindow, QVBoxLayout, QTextEdit
 from settings import Setting
@@ -93,6 +93,7 @@ class InputTextEditButton(QWidget):
 
         # 绑定按钮作用
         self.btn.clicked.connect(self.process_input_text)
+
         self.btn.setShortcut("Return")
         # 鼠标挪上去显示个提示
         self.btn.setToolTip('man!')
@@ -107,9 +108,9 @@ class InputTextEditButton(QWidget):
         self.chat_window.user_text = self.input_text
         self.chat_window.send_message(self.input_text)
 
-        # # 通过线程异步运行阿里云api的调用类
-        # self.thread_caa = WorkerThread(self.api, self.input_text)
-        # self.thread_caa.start()
+        # 通过线程异步运行阿里云api的调用类
+        self.thread_caa = WorkerThread(self.api, self.input_text)
+        self.thread_caa.start()
 
         print(self.input_text)
         self.input_text_edit.clear()

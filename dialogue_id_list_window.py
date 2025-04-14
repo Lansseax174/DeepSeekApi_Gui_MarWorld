@@ -12,9 +12,11 @@ class DialogueIdListWinodw(QWidget):
     chat_bubble_add_assistant = pyqtSignal(str)
     chat_bubble_add_user = pyqtSignal(str)
     clean_bubble = pyqtSignal()
-    def __init__(self):
+    update_dialogueID_window = pyqtSignal(str)
+    chat_bubble_time = pyqtSignal(str)
+    def __init__(self,log_dialogue):
         super().__init__()
-
+        self.log_dialogue = log_dialogue
         self.dialogue_list = QListWidget()
         # self.load_dialogue_list()
         # 载入魅力的json文件列表 (注释化，丢到chat_display_screen.py里运行这一行了，
@@ -22,7 +24,7 @@ class DialogueIdListWinodw(QWidget):
 
         layout = QVBoxLayout(self)
         layout.addWidget(self.dialogue_list)
-        self.dialogue_list.itemClicked.connect(self.on_item_clicked)
+        self.dialogue_list.itemClicked.connect(self.on_item_clicked2)
 
     def load_dialogue_list(self):
 
@@ -39,7 +41,7 @@ class DialogueIdListWinodw(QWidget):
         ]
 
         # json_files排序.key = lambda 建立一个匿名函数 获取 file文件的时间戳来排序，reverse决定排序顺序是正还是反
-        json_files.sort(key = lambda file: os.path.getmtime(os.path.join(dialogue_content_log, file))
+        json_files.sort(key = lambda file: os.path.getctime(os.path.join(dialogue_content_log, file))
                         ,reverse = True)
 
         # for file in json_files:
@@ -55,7 +57,7 @@ class DialogueIdListWinodw(QWidget):
             self.dialogue_list.addItem(f"{read_file_name}\n({read_time})")
 
         self.dialogue_list.setCurrentItem(self.dialogue_list.item(0))
-        self.on_item_clicked(self.dialogue_list.item(0))
+        self.on_item_clicked1(self.dialogue_list.item(0))
 
     def load_dialogues_from_json(self):
         try:
@@ -65,27 +67,52 @@ class DialogueIdListWinodw(QWidget):
             return
         try:
             for dialogue in dialogues:
+                self.time = dialogue["time"]
                 text = dialogue["content"]
                 type = dialogue["type"]
                 if type == "user":
                     self.chat_bubble_add_user.emit(text)
+                    self.chat_bubble_time.emit(self.time)
                 elif type == "answer":
                     self.chat_bubble_add_assistant.emit(text)
+                    self.chat_bubble_time.emit(self.time)
         except Exception as e:
             print('[错误] for dialogue in dialogues 失败')
             return
         print(dialogues)
+    #
+    # def get_lastest_modify_time(self):
 
-    def on_item_clicked(self, item):
+    def on_item_clicked1(self, item):
         self.selected_filename = item.text()
         # 获取点中的文件的文件名
         self.selected_file_path = os.path.join(
             'LogDialogue', 'DialogueContentLog', f"{self.selected_filename[:-22]}.json")
 
+        self.log_dialogue.log_file = os.path.join(
+            'LogDialogue', 'DialogueContentLog', f'{self.selected_filename[:-22]}.json')
+
         with open(self.selected_file_path, 'r', encoding='utf-8-sig') as log_file_object:
             self.data = json.load(log_file_object)
 
         print('选中')
+        # self.update_dialogueID_window.emit(f'{self.selected_filename[:-22]}.json')
         self.clean_bubble.emit()
         self.load_dialogues_from_json()
 
+    def on_item_clicked2(self, item):
+        self.selected_filename = item.text()
+        # 获取点中的文件的文件名
+        self.selected_file_path = os.path.join(
+            'LogDialogue', 'DialogueContentLog', f"{self.selected_filename[:-22]}.json")
+
+        self.log_dialogue.log_file = os.path.join(
+            'LogDialogue', 'DialogueContentLog', f'{self.selected_filename[:-22]}.json')
+
+        with open(self.selected_file_path, 'r', encoding='utf-8-sig') as log_file_object:
+            self.data = json.load(log_file_object)
+
+        print('选中')
+        self.update_dialogueID_window.emit(f'{self.selected_filename[:-22]}')
+        self.clean_bubble.emit()
+        self.load_dialogues_from_json()

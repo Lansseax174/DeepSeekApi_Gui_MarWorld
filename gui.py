@@ -9,9 +9,10 @@ from dialogue_id_list_window import DialogueIdListWinodw
 
 
 class WindowGui(QMainWindow):
-    def __init__(self, api, setting, log_object, dialogue_id1):
+    def __init__(self, api, setting, log_object, dialogue_id1, log_dialogue):
         super().__init__()
         # 定义一些后面要用的变量
+        self.log_dialogue = log_dialogue
         self.make_new_chat_button = None
         self.dialogue_list = None
         self.dialogueID_window = None
@@ -50,8 +51,8 @@ class WindowGui(QMainWindow):
         self.setWindowTitle("MarWorld")
 
         # 创建显示所有对话列表的窗口
-        self.dialogue_list = DialogueIdListWinodw()
-
+        self.dialogue_list = DialogueIdListWinodw(self.log_dialogue)
+        self.dialogue_list.update_dialogueID_window.connect(self.update_dialogueID_window)
         # 退出按钮实例化
         quit_button = button.QuitButton(self)
 
@@ -155,6 +156,10 @@ class WindowGui(QMainWindow):
         self.dialogueID_window.setReadOnly(True)
         self.dialogueID_window.setFont(QFont(*self.setting.dialogueID_window_Font))
         self.dialogueID_window.setFixedSize(*self.setting.dialogueID_window)
+
+    def update_dialogueID_window(self,text):
+        temp_text = '当前对话ID:' + '\n' + str(text)
+        self.dialogueID_window.setText(temp_text)
 
     def make_input_text_edit(self):
         # 创建用户输入内容的文本框

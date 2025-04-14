@@ -1,16 +1,34 @@
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QWidget, QHBoxLayout, QLabel, QVBoxLayout, QListWidget, QListWidgetItem, QSizePolicy
-import json
+from datetime import datetime
 
+def get_time():
+    now = datetime.now()
+    if now.hour < 12:
+        am_pm = '上午'
+    else:
+        am_pm = '下午'
+
+    if 1 <= now.hour <= 12:
+        hour_12 = now.hour
+    elif now.hour > 12:
+        hour_12 = now.hour - 12
+    else:
+        hour_12 = 12
+
+    formatted_time = f"{now.year}-{now.month}-{now.day} {am_pm} {hour_12}:{now.minute:02d}"
+    # formatted_time = f"{now.year}-{now.month}-{now.day} {am_pm} {hour_12}:{now.minute:02d}"
+    # formatted_time = f"\n{now.month}-{now.day}{am_pm}{hour_12}:{now.minute:02d}"
+    return formatted_time
 
 class ChatBubble(QWidget):
-    def __init__(self, sender, text, align, avatar_path, api, setting):
+    def __init__(self, sender, text, align, avatar_path, api, setting, chat_bubble_time):
         super().__init__()
         self.text = text
         self.api = api
         self.setting = setting
-
+        self.chat_bubble_time = chat_bubble_time
         layout = QHBoxLayout()
 
         # 头像
@@ -35,7 +53,12 @@ class ChatBubble(QWidget):
         self.message.setMinimumSize(*self.setting.message_MinimumSize)  # 最小宽度和高度
 
         # 发送者名称显示
-        sender_label = QLabel(f"{sender}")
+        # time = '1'
+        sender_label = QLabel(
+            f"<span style='font-weight: bold; font-size: 14px; color: white; ;'>{sender}</span> "
+            f"<span style='font-size: 11px; color: gray; ;'>{self.chat_bubble_time}</span>"
+        )
+
         sender_label.setStyleSheet("font-weight: bold; font-size: 12px")  # 加粗,字体大小
 
         # 垂直布局(VBox)
@@ -76,6 +99,7 @@ class ChatWindow(QWidget):
         self.dialouge_list.chat_bubble_add_assistant.connect(self.send_assistant_message_from_dialogue_list)
         self.dialouge_list.chat_bubble_add_user.connect(self.send_user_message_from_dialogue_list)
         self.dialouge_list.clean_bubble.connect(self.clean_bubble)
+        self.dialouge_list.chat_bubble_time.connect(self.chat_bubble_time_from_json)
 
         # 聊天记录窗口创建
         self.chat_list = QListWidget(self)
@@ -83,31 +107,42 @@ class ChatWindow(QWidget):
 
         self.dialouge_list.load_dialogue_list()
 
+
     def clean_bubble(self):
         self.chat_list.clear()
+
     def send_assistant_message_from_dialogue_list(self, text):
         print("send_assistant_message_from_dialogue_list")
         self.add_message('DeepSeek', text, 'left', "my_avatar.png")
 
     def send_user_message_from_dialogue_list(self, text):
         print("send_user_message_from_dialogue_list")
-        self.add_message('我', text, 'right', "my_avatar.png")
-
-
+        self.add_message(f'我', text, 'right', "my_avatar.png")
 
     def send_assistant_message(self):
+        time = get_time()
+        self.chat_bubble_time = time
         self.add_message('DeepSeek', self.assistant_answer_text, 'left', "my_avatar.png")
 
     def send_message(self, text):
         self.user_text = text
         if self.user_text:
+            time = get_time()
+            self.chat_bubble_time = time
+            print(self.chat_bubble_time)
             self.user_make_bubble_judge = 1
             self.add_message('我', self.user_text, 'right', "my_avatar.png")
 
+    def chat_bubble_time_from_json(self,time):
+        if time:
+            self.chat_bubble_time = time
+            print("chat_bubble_time")
+
     def add_message(self, sender, text, align, avatar):
         # QListWidget中的一个项，承载具体的内容
+
         item = QListWidgetItem()
-        self.chat_bubble1 = ChatBubble(sender, text, align, avatar, self.api, self.setting)
+        self.chat_bubble1 = ChatBubble(sender, text, align, avatar, self.api, self.setting,self.chat_bubble_time)
         item.setSizeHint(self.chat_bubble1.sizeHint())  # 设置item显示的大小
         self.chat_list.addItem(item)  # 将item加入到chat_list
         self.chat_list.setItemWidget(item, self.chat_bubble1)  # 使每一个item显示为chat_bubble组件，而不是静态文本

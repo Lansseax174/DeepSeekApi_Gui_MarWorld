@@ -2,8 +2,28 @@ import json
 import os
 from typing import cast
 import time
-
+from datetime import datetime
 from dialogue_id import DialogueID
+
+def get_time():
+    now = datetime.now()
+    if now.hour < 12:
+        am_pm = '上午'
+    else:
+        am_pm = '下午'
+
+    if 1 <= now.hour <= 12:
+        hour_12 = now.hour
+    elif now.hour > 12:
+        hour_12 = now.hour - 12
+    else:
+        hour_12 = 12
+
+    formatted_time = f"{now.year}-{now.month}-{now.day} {am_pm} {hour_12}:{now.minute:02d}"
+    # formatted_time = f"{now.year}-{now.month}-{now.day} {am_pm} {hour_12}:{now.minute:02d}"
+    # formatted_time = f"\n{now.month}-{now.day}{am_pm}{hour_12}:{now.minute:02d}"
+    return formatted_time
+
 
 class LogContext:
     def __init__(self, api, dialogue_id1):
@@ -20,7 +40,7 @@ class LogContext:
 
         self.reasoning_content = ''
         self.answer_content = self.api.answer_content_output_spread
-        self.formatted_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        self.formatted_time = get_time()
 
 
 
@@ -32,7 +52,7 @@ class LogContext:
 
         # 根据dialogue_id创建存储对话内容的Json文件
     def update_time(self):
-        self.formatted_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        self.formatted_time = get_time()
 
     def logging_api_reasoning_content(self, text):
         self.update_time()
