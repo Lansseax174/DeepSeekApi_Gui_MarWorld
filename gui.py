@@ -51,7 +51,7 @@ class WindowGui(QMainWindow):
         self.setWindowTitle("MarWorld")
 
         # 创建显示所有对话列表的窗口
-        self.dialogue_list = DialogueIdListWinodw(self.log_dialogue)
+        self.dialogue_list = DialogueIdListWinodw(self.log_dialogue, self.dialogue_id1)
         self.dialogue_list.update_dialogueID_window.connect(self.update_dialogueID_window)
         # 退出按钮实例化
         quit_button = button.QuitButton(self)

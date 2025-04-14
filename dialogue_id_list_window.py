@@ -14,9 +14,13 @@ class DialogueIdListWinodw(QWidget):
     clean_bubble = pyqtSignal()
     update_dialogueID_window = pyqtSignal(str)
     chat_bubble_time = pyqtSignal(str)
-    def __init__(self,log_dialogue):
+    def __init__(self, log_dialogue, dialogue_id1):
         super().__init__()
+        self.selected_file_path = None
+        self.selected_filename = None
+        self.data = None
         self.log_dialogue = log_dialogue
+        self.dialogue_id1 = dialogue_id1
         self.dialogue_list = QListWidget()
         # self.load_dialogue_list()
         # 载入魅力的json文件列表 (注释化，丢到chat_display_screen.py里运行这一行了，
@@ -62,21 +66,21 @@ class DialogueIdListWinodw(QWidget):
     def load_dialogues_from_json(self):
         try:
             dialogues = self.data.get("dialogues", [])
-        except Exception as e:
+        except Exception:
             print('[错误] 获取 dialogues 失败')
             return
         try:
             for dialogue in dialogues:
-                self.time = dialogue["time"]
+                time = dialogue["time"]
                 text = dialogue["content"]
-                type = dialogue["type"]
-                if type == "user":
+                type1 = dialogue["type"]
+                if type1 == "user":
+                    self.chat_bubble_time.emit(time)
                     self.chat_bubble_add_user.emit(text)
-                    self.chat_bubble_time.emit(self.time)
-                elif type == "answer":
+                elif type1 == "answer":
+                    self.chat_bubble_time.emit(time)
                     self.chat_bubble_add_assistant.emit(text)
-                    self.chat_bubble_time.emit(self.time)
-        except Exception as e:
+        except Exception:
             print('[错误] for dialogue in dialogues 失败')
             return
         print(dialogues)
@@ -113,6 +117,8 @@ class DialogueIdListWinodw(QWidget):
             self.data = json.load(log_file_object)
 
         print('选中')
+        self.dialogue_id1.dialogue_id = f'{self.selected_filename[:-22]}.json'
         self.update_dialogueID_window.emit(f'{self.selected_filename[:-22]}')
+        print(f'{self.selected_filename[:-22]}' + "\n----")
         self.clean_bubble.emit()
         self.load_dialogues_from_json()

@@ -29,6 +29,7 @@ class ChatBubble(QWidget):
         self.api = api
         self.setting = setting
         self.chat_bubble_time = chat_bubble_time
+
         layout = QHBoxLayout()
 
         # 头像
@@ -78,7 +79,6 @@ class ChatBubble(QWidget):
             layout.addWidget(avatar)
         self.setLayout(layout)
 
-
 class ChatWindow(QWidget):
 
     def __init__(self, api, setting, dialogue_id, dialogue_list):
@@ -94,12 +94,14 @@ class ChatWindow(QWidget):
         self.user_text = None
         self.dialogue_id = dialogue_id
         self.setWindowTitle("类Wechat窗口")
+        self.chat_bubble_time = None
 
+        # dialogue_list传入信号
         self.dialouge_list = dialogue_list
+        self.dialouge_list.chat_bubble_time.connect(self.chat_bubble_time_from_json)
         self.dialouge_list.chat_bubble_add_assistant.connect(self.send_assistant_message_from_dialogue_list)
         self.dialouge_list.chat_bubble_add_user.connect(self.send_user_message_from_dialogue_list)
         self.dialouge_list.clean_bubble.connect(self.clean_bubble)
-        self.dialouge_list.chat_bubble_time.connect(self.chat_bubble_time_from_json)
 
         # 聊天记录窗口创建
         self.chat_list = QListWidget(self)
@@ -107,6 +109,8 @@ class ChatWindow(QWidget):
 
         self.dialouge_list.load_dialogue_list()
 
+        # time = get_time()
+        # self.chat_bubble_time = None
 
     def clean_bubble(self):
         self.chat_list.clear()
@@ -142,6 +146,7 @@ class ChatWindow(QWidget):
         # QListWidget中的一个项，承载具体的内容
 
         item = QListWidgetItem()
+        # 实例化一个chat_bubble
         self.chat_bubble1 = ChatBubble(sender, text, align, avatar, self.api, self.setting,self.chat_bubble_time)
         item.setSizeHint(self.chat_bubble1.sizeHint())  # 设置item显示的大小
         self.chat_list.addItem(item)  # 将item加入到chat_list
