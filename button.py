@@ -117,8 +117,9 @@ class InputTextEditButton(QWidget):
 
 # [新聊天]按钮功能
 class MakeNewChatButton(QWidget):
-    def __init__(self):
+    def __init__(self,dialogue_id):
         super().__init__()
+        self.dialogue_id = dialogue_id
         QToolTip.setFont(QFont('SansSerif', 10))
         # QToolTip.setFont(QFont('华文琥珀', 10))
         # 创建QPushButton

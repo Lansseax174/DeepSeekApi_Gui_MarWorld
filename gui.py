@@ -91,7 +91,7 @@ class WindowGui(QMainWindow):
             self.input_text_edit, self.api, chat_window, self.log_object)
 
         # 实例化[新聊天]按钮
-        self.make_new_chat_button = button.MakeNewChatButton()
+        self.make_new_chat_button = button.MakeNewChatButton(self.dialogue_id1)
 
         # 最右侧按钮列表垂直布局
         button_container = QWidget()
