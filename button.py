@@ -1,10 +1,12 @@
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QFont
-from PyQt6.QtWidgets import QWidget, QToolTip, QPushButton, QApplication, QMainWindow, QVBoxLayout, QTextEdit
+from PyQt6.QtWidgets import QWidget, QToolTip, QPushButton, QApplication, QMainWindow, QVBoxLayout, QTextEdit, QLabel, \
+    QLineEdit, QHBoxLayout
 from settings import Setting
 from worker_thread import WorkerThread
 
 setting = Setting()
+api_key = 'REMOVED_KEY7baa2a5a6bf04b91aaf5eec210a4f0e6'
 
 class QuitButton(QWidget):
 
@@ -32,7 +34,12 @@ class QuitButton(QWidget):
 class ModelAndApiSelectWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
+        self.new_api = None
+
+        self.confirm_button = None
+        self.text_show_now_api = None
         self.text_edit = None
+        self.text1 = None
         self.setWindowTitle("模型和API选择")
         self.resize(*setting.model_api_select_window)  # 设置子窗口的大小
 
@@ -43,10 +50,28 @@ class ModelAndApiSelectWindow(QMainWindow):
         # 创建一个布局
         layout = QVBoxLayout()
 
-        # 添加一些控件（示例：一个文本编辑框和一个按钮）
+        self.text1 = QLabel('当前api:')
+
+        # 显示当前使用的api
+        self.text_show_now_api = QLineEdit(api_key)
+        self.text_show_now_api.setReadOnly(True)
+
+        # 修改api输入框
         self.text_edit = QTextEdit()
         self.text_edit.setPlaceholderText("在这里输入内容...")
+
+        # 确认按钮
+        self.confirm_button = QPushButton('确认')
+        self.confirm_button.clicked.connect(self.update_api)
+
+
+        self.horizon_Layout = QHBoxLayout()
+        self.horizon_Layout.addWidget(self.text1)
+        self.horizon_Layout.addWidget(self.text_show_now_api)
+
+        layout.addLayout(self.horizon_Layout)
         layout.addWidget(self.text_edit)
+        layout.addWidget(self.confirm_button)
 
         self.close_button = QPushButton("关闭")
         self.close_button.clicked.connect(self.close)  # 点击按钮关闭窗口
@@ -54,6 +79,14 @@ class ModelAndApiSelectWindow(QMainWindow):
 
         # 设置布局
         central_widget.setLayout(layout)
+    def update_api(self):
+        # 将输入框api更新并使用
+        global api_key
+        self.new_api = self.text_edit.toPlainText().strip()
+        if self.new_api:
+            api_key = self.new_api
+            self.text_show_now_api.setText(api_key)
+
 
 
 class ModelAndApiSelectButton(QWidget):

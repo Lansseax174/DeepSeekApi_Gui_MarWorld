@@ -78,10 +78,6 @@ class WindowGui(QMainWindow):
         # 创建一个显示时间的显示框
         self.make_time_show()
 
-        # self.timer = QTimer(self)
-        # self.timer.timeout.connect(self.update_text)
-        # self.timer.start(1000)
-
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.update_time)
         self.timer.start(1000)

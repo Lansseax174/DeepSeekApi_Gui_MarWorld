@@ -44,9 +44,10 @@ class DialogueIdListWinodw(QWidget):
             if file.endswith(".json")
         ]
 
-        # json_files排序.key = lambda 建立一个匿名函数 获取 file文件的时间戳来排序，reverse决定排序顺序是正还是反
-        json_files.sort(key = lambda file: os.path.getctime(os.path.join(dialogue_content_log, file))
-                        ,reverse = True)
+        # json_files排序
+        json_files.sort(    key=lambda file: int(file[:-5]),  # 去掉.json再转成整数
+                            reverse=True                      # True = 从大到小（递减排序）
+                        )
 
         # for file in json_files:
         #     self.dialogue_list.addItem(file[:-5])

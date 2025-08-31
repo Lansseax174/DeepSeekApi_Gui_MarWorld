@@ -1,5 +1,6 @@
 from PyQt6.QtCore import pyqtSignal, QObject
 from openai import OpenAI
+import button
 
 class CallAlibabaApi(QObject):
     # content_updated_signal = pyqtSignal(str)
@@ -15,6 +16,7 @@ class CallAlibabaApi(QObject):
 
     def __init__(self):
         super().__init__()
+        self.api_key = None
         self.reason_log_judge = 0
         self.streaming_word = ''
         self.reason_content_default = '-' * 40 + '思考内容' + '-' * 40 + '\n\n'
@@ -24,10 +26,13 @@ class CallAlibabaApi(QObject):
 
     def call_alibaba_api(self, input_text):
         self.input_text = input_text
+        self.api_key = button.api_key
+
         # 初始化OpenAI客户端
         client = OpenAI(
+            # api_key="REMOVED_KEY7baa2a5a6bf04b91aaf5eec210a4f0e6"
             # 如果没有配置环境变量，请用百炼API Key替换：api_key="REMOVED_KEYxxx"
-            api_key="REMOVED_KEY7baa2a5a6bf04b91aaf5eec210a4f0e6",
+            api_key= self.api_key,
             base_url="https://dashscope.aliyuncs.com/compatible-mode/v1"
         )
 
