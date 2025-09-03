@@ -2,7 +2,6 @@ from PyQt6.QtCore import pyqtSignal, QObject
 from PyQt6.QtWidgets import QApplication, QMessageBox
 from openai import OpenAI
 import button
-import sys
 
 class CallAlibabaApi(QObject):
     # content_updated_signal = pyqtSignal(str)
@@ -100,16 +99,5 @@ class CallAlibabaApi(QObject):
 
     def judge_api_key(self):
         if not self.api_key or self.api_key == "Your_Api_Key":
-
-            app = QApplication.instance()
-            if app is None:
-                app = QApplication([])
-
-            msg_box = QMessageBox()
-            msg_box.setWindowTitle("提示")
-            msg_box.setText("API Key 未配置")
-            msg_box.setIcon(QMessageBox.Icon.Warning)
-            msg_box.setStandardButtons(QMessageBox.StandardButton.Ok)  # 或 NoButton
-            msg_box.show()  # 用 show() 而不是 exec()
             return True  # 不合法,返回[确认不合法]True!
         return False  # 合法,返回[没问题]False!

@@ -27,5 +27,6 @@ log_object = LogContext(call_alibaba_api_instance, dialogue_id1)
 main_window = WindowGui(call_alibaba_api_instance, setting, log_object, dialogue_id1, log_object)
 main_window.show()
 
+
 # 启用事件循环,相当于可以智能的结束循环并退出程序的While True
 sys.exit(app.exec())
