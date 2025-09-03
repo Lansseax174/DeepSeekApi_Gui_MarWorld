@@ -4,9 +4,10 @@ from PyQt6.QtWidgets import QWidget, QToolTip, QPushButton, QApplication, QMainW
     QLineEdit, QHBoxLayout
 from settings import Setting
 from worker_thread import WorkerThread
-
+import os
 setting = Setting()
-api_key = 'REMOVED_KEY7baa2a5a6bf04b91aaf5eec210a4f0e6'
+
+api_key = 'Your_Api_Key'
 
 class QuitButton(QWidget):
 

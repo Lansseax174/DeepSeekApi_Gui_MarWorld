@@ -1,6 +1,8 @@
 from PyQt6.QtCore import pyqtSignal, QObject
+from PyQt6.QtWidgets import QApplication, QMessageBox
 from openai import OpenAI
 import button
+import sys
 
 class CallAlibabaApi(QObject):
     # content_updated_signal = pyqtSignal(str)
@@ -27,10 +29,11 @@ class CallAlibabaApi(QObject):
     def call_alibaba_api(self, input_text):
         self.input_text = input_text
         self.api_key = button.api_key
+        if self.judge_api_key():
+            return
 
         # 初始化OpenAI客户端
         client = OpenAI(
-            # 如果没有配置环境变量，请用百炼API Key替换：api_key="REMOVED_KEYxxx"
             api_key= self.api_key,
             base_url="https://dashscope.aliyuncs.com/compatible-mode/v1"
         )
@@ -94,3 +97,19 @@ class CallAlibabaApi(QObject):
         self.stop_answer.emit()
         self.log_answer_content_updated_signal.emit(self.answer_content_output_spread)
         self.finished_signal.emit()  # 发送完成思考和回答的信号
+
+    def judge_api_key(self):
+        if not self.api_key or self.api_key == "Your_Api_Key":
+
+            app = QApplication.instance()
+            if app is None:
+                app = QApplication([])
+
+            msg_box = QMessageBox()
+            msg_box.setWindowTitle("提示")
+            msg_box.setText("API Key 未配置")
+            msg_box.setIcon(QMessageBox.Icon.Warning)
+            msg_box.setStandardButtons(QMessageBox.StandardButton.Ok)  # 或 NoButton
+            msg_box.show()  # 用 show() 而不是 exec()
+            return True  # 不合法,返回[确认不合法]True!
+        return False  # 合法,返回[没问题]False!
