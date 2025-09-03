@@ -30,7 +30,6 @@ class CallAlibabaApi(QObject):
 
         # 初始化OpenAI客户端
         client = OpenAI(
-            # api_key="REMOVED_KEY7baa2a5a6bf04b91aaf5eec210a4f0e6"
             # 如果没有配置环境变量，请用百炼API Key替换：api_key="REMOVED_KEYxxx"
             api_key= self.api_key,
             base_url="https://dashscope.aliyuncs.com/compatible-mode/v1"
@@ -42,16 +41,17 @@ class CallAlibabaApi(QObject):
 
         # 创建聊天完成请求
         completion = client.chat.completions.create(
-            model="deepseek-r1",
+            model="deepseek-v3.1",
             # 此处以 deepseek-r1 为例，可按需更换模型名称
             messages=[
                 {"role": "user", "content": self.input_text}
             ],
+            extra_body={"enable_thinking": True},
             stream=True,
             # 解除以下注释会在最后一个chunk返回Token使用量
-            # stream_options={
-            #     "include_usage": True
-            # }
+            stream_options={
+                "include_usage": True
+            }
         )
         print("\n" + "=" * 20 + "思考过程" + "=" * 20 + "\n")
         self.reasoning_content_output_spread = self.reason_content_default
