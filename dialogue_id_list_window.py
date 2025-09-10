@@ -8,7 +8,7 @@ from PyQt6.QtWidgets import QWidget, QVBoxLayout, QListWidget
 dialogue_content_log = 'LogDialogue\DialogueContentLog'
 
 
-class DialogueIdListWinodw(QWidget):
+class DialogueIdListWindow(QWidget):
     chat_bubble_add_assistant = pyqtSignal(str)
     chat_bubble_add_user = pyqtSignal(str)
     clean_bubble = pyqtSignal()

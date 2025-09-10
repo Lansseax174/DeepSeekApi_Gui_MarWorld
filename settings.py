@@ -17,7 +17,7 @@ class Setting:
         self.chat_window = (900, 600)
 
         # 时间显示小窗-宽度,高度
-        self.time_show_window = (133, 65)
+        self.time_show_window = (135, 65)
 
         # 对话ID显示窗口-宽度,高度,字体,字号
         self.dialogueID_window = (133, 50)
@@ -28,7 +28,7 @@ class Setting:
         self.quit_button_Font = ('华文琥珀', 15)
 
         # 模型和api选择窗口-[打开按钮]-宽度,高度
-        self.model_api_select_button = (100, 50)
+        self.model_api_select_button = (135, 60)
 
         # 模型和api选择窗口-宽度,高度
         self.model_api_select_window = (500, 300)

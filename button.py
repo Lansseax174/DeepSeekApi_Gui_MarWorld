@@ -8,6 +8,7 @@ import os
 setting = Setting()
 
 api_key = 'Your_Api_Key'
+model_key = ''
 
 class QuitButton(QWidget):
 
@@ -51,26 +52,36 @@ class ModelAndApiSelectWindow(QMainWindow):
         # 创建一个布局
         layout = QVBoxLayout()
 
-        self.text1 = QLabel('当前api:')
+        self.text1 = QLabel('当前     api:')
+        self.text2 = QLabel('当前model:')
 
         # 显示当前使用的api
         self.text_show_now_api = QLineEdit(api_key)
         self.text_show_now_api.setReadOnly(True)
 
+        # 显示当前使用的model
+        self.text_show_now_model = QLineEdit(model_key)
+        self.text_show_now_api.setReadOnly(True)
+
         # 修改api输入框
         self.text_edit = QTextEdit()
-        self.text_edit.setPlaceholderText("在这里输入内容...")
+        self.text_edit.setPlaceholderText("在这里输入api")
 
-        # 确认按钮
-        self.confirm_button = QPushButton('确认')
+        # 确认api按钮
+        self.confirm_button = QPushButton('确认api')
         self.confirm_button.clicked.connect(self.update_api)
 
 
-        self.horizon_Layout = QHBoxLayout()
-        self.horizon_Layout.addWidget(self.text1)
-        self.horizon_Layout.addWidget(self.text_show_now_api)
+        self.horizon_Layout1 = QHBoxLayout()
+        self.horizon_Layout1.addWidget(self.text1)
+        self.horizon_Layout1.addWidget(self.text_show_now_api)
 
-        layout.addLayout(self.horizon_Layout)
+        self.horizon_Layout2 = QHBoxLayout()
+        self.horizon_Layout2.addWidget(self.text2)
+        self.horizon_Layout2.addWidget(self.text_show_now_model)
+
+        layout.addLayout(self.horizon_Layout1)
+        layout.addLayout(self.horizon_Layout2)
         layout.addWidget(self.text_edit)
         layout.addWidget(self.confirm_button)
 
@@ -96,7 +107,7 @@ class ModelAndApiSelectButton(QWidget):
         self.model_api_window = None
 
         QToolTip.setFont(QFont('SansSerif', 10))
-        self.btn = QPushButton('Api-Model', self)
+        self.btn = QPushButton('Api-Model更改', self)
         font = QFont('华文琥珀', 13)  # 字体设置为Arial，大小为14
         self.btn.setFont(font)
         self.btn.clicked.connect(self.open_model_api_window)
@@ -105,6 +116,7 @@ class ModelAndApiSelectButton(QWidget):
     def open_model_api_window(self):
         parent = self.parent()
         self.model_api_window = ModelAndApiSelectWindow(parent)
+        # 实例化更改model和api的界面
         self.model_api_window.show()
 
 # [发送]按钮功能
@@ -151,9 +163,9 @@ class InputTextEditButton(QWidget):
 
 # [新聊天]按钮功能
 class MakeNewChatButton(QWidget):
-    def __init__(self,dialogue_id, dialouge_list):
+    def __init__(self,dialogue_id, dialouge_list1):
         super().__init__()
-        self.dialouge_list = dialouge_list
+        self.dialouge_list1 = dialouge_list1
         self.dialogue_id = dialogue_id
         QToolTip.setFont(QFont('SansSerif', 10))
         # QToolTip.setFont(QFont('华文琥珀', 10))
@@ -175,4 +187,7 @@ class MakeNewChatButton(QWidget):
     def make_new_chat(self):
         print('创建新的聊天')
         self.dialogue_id.current_id_plus()
-        self.dialouge_list.load_dialogue_list()
+        self.dialouge_list1.load_dialogue_list()
+        first_item = self.dialouge_list1.dialogue_list.item(0)
+        if first_item:
+            self.dialouge_list1.on_item_clicked2(first_item)

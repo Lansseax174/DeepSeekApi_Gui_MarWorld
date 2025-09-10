@@ -5,7 +5,7 @@ from PyQt6.QtCore import QDate, QDateTime, Qt, QTime
 import button
 
 from chat_display_screen import ChatWindow
-from dialogue_id_list_window import DialogueIdListWinodw
+from dialogue_id_list_window import DialogueIdListWindow
 
 
 class WindowGui(QMainWindow):
@@ -51,7 +51,8 @@ class WindowGui(QMainWindow):
         self.setWindowTitle("MarWorld")
 
         # 创建显示所有对话列表的窗口
-        self.dialogue_list = DialogueIdListWinodw(self.log_dialogue, self.dialogue_id1)
+        self.dialogue_list = DialogueIdListWindow(self.log_dialogue, self.dialogue_id1)
+        self.dialogue_list1 = self.dialogue_list
         self.dialogue_list.update_dialogueID_window.connect(self.update_dialogueID_window)
         # 退出按钮实例化
         quit_button = button.QuitButton(self)
@@ -87,7 +88,7 @@ class WindowGui(QMainWindow):
             self.input_text_edit, self.api, chat_window, self.log_object)
 
         # 实例化[新聊天]按钮
-        self.make_new_chat_button = button.MakeNewChatButton(self.dialogue_id1,self.dialogue_list)
+        self.make_new_chat_button = button.MakeNewChatButton(self.dialogue_id1,self.dialogue_list1)
 
         # 最右侧按钮列表垂直布局
         button_container = QWidget()
@@ -115,8 +116,9 @@ class WindowGui(QMainWindow):
         quit_button.setMinimumSize(135, 60)
         self.dialogue_list.setFixedSize(200, 830)
         self.input_text_edit_button.setMinimumSize(135, 60)
+        model_api_button.setMinimumSize(100, 60)
         self.make_new_chat_button.setMinimumSize(135, 60)
-        model_api_button.setMinimumSize(100, 50)
+        self.time_show.setMinimumSize(135, 65)
 
         # 使用QWidet来设置布局
         central_widget = QWidget(self)
