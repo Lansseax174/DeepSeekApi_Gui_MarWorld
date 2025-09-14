@@ -17,6 +17,7 @@ class CallAlibabaApi(QObject):
 
     def __init__(self):
         super().__init__()
+        self.model_key = None
         self.api_key = None
         self.reason_log_judge = 0
         self.streaming_word = ''
@@ -28,6 +29,7 @@ class CallAlibabaApi(QObject):
     def call_alibaba_api(self, input_text):
         self.input_text = input_text
         self.api_key = button.api_key
+        self.model_key = button.model_key
         if self.judge_api_key():
             return
 
@@ -36,15 +38,13 @@ class CallAlibabaApi(QObject):
             api_key= self.api_key,
             base_url="https://dashscope.aliyuncs.com/compatible-mode/v1"
         )
-
         reasoning_content = ""  # 定义完整思考过程
         answer_content = ""  # 定义完整回复
         is_answering = False  # 判断是否结束思考过程并开始回复
-
         # 创建聊天完成请求
+        print(self.model_key)
         completion = client.chat.completions.create(
-            model="deepseek-v3.1",
-            # 此处以 deepseek-r1 为例，可按需更换模型名称
+            model=self.model_key,
             messages=[
                 {"role": "user", "content": self.input_text}
             ],
@@ -95,6 +95,7 @@ class CallAlibabaApi(QObject):
 
         self.stop_answer.emit()
         self.log_answer_content_updated_signal.emit(self.answer_content_output_spread)
+        self.answer_content_output_spread = ""
         self.finished_signal.emit()  # 发送完成思考和回答的信号
 
     def judge_api_key(self):

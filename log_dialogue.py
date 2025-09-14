@@ -68,6 +68,7 @@ class LogContext:
 
     def logging_api_answer_content(self, text):
         self.update_time()
+        print(text)
         self.add_api_answer_dictionary = [
                                            {"time": self.formatted_time,
                                             "role": "assistant",

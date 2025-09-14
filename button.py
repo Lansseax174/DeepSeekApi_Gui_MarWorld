@@ -8,7 +8,7 @@ import os
 setting = Setting()
 
 api_key = 'Your_Api_Key'
-model_key = ''
+model_key = 'deepseek-v3.1'
 
 class QuitButton(QWidget):
 
@@ -37,10 +37,10 @@ class ModelAndApiSelectWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.new_api = None
+        self.new_model = None
 
         self.confirm_button = None
         self.text_show_now_api = None
-        self.text_edit = None
         self.text1 = None
         self.setWindowTitle("模型和API选择")
         self.resize(*setting.model_api_select_window)  # 设置子窗口的大小
@@ -61,15 +61,27 @@ class ModelAndApiSelectWindow(QMainWindow):
 
         # 显示当前使用的model
         self.text_show_now_model = QLineEdit(model_key)
-        self.text_show_now_api.setReadOnly(True)
+        self.text_show_now_model.setReadOnly(True)
 
         # 修改api输入框
-        self.text_edit = QTextEdit()
-        self.text_edit.setPlaceholderText("在这里输入api")
+        self.text_edit_api = QTextEdit()
+        self.text_edit_api.setFixedSize(400, 70)
+        self.text_edit_api.setPlaceholderText("在这里输入api")
 
         # 确认api按钮
-        self.confirm_button = QPushButton('确认api')
-        self.confirm_button.clicked.connect(self.update_api)
+        self.confirm_button_api = QPushButton('确认api')
+        self.confirm_button_api.setFixedSize(100, 70)
+        self.confirm_button_api.clicked.connect(self.update_api)
+
+        # 修改model输入框
+        self.text_edit_model = QTextEdit()
+        self.text_edit_model.setFixedSize(400,70)
+        self.text_edit_model.setPlaceholderText("在这里输入model")
+
+        # 确认model按钮
+        self.confirm_button_model = QPushButton('确认model')
+        self.confirm_button_model.setFixedSize(100,70)
+        self.confirm_button_model.clicked.connect(self.update_model)
 
 
         self.horizon_Layout1 = QHBoxLayout()
@@ -80,24 +92,42 @@ class ModelAndApiSelectWindow(QMainWindow):
         self.horizon_Layout2.addWidget(self.text2)
         self.horizon_Layout2.addWidget(self.text_show_now_model)
 
+        self.horizon_Layout3 = QHBoxLayout()
+        self.horizon_Layout3.addWidget(self.text_edit_api)
+        self.horizon_Layout3.addWidget(self.confirm_button_api)
+
+        self.horizon_Layout4 = QHBoxLayout()
+        self.horizon_Layout4.addWidget(self.text_edit_model)
+        self.horizon_Layout4.addWidget(self.confirm_button_model)
+
         layout.addLayout(self.horizon_Layout1)
         layout.addLayout(self.horizon_Layout2)
-        layout.addWidget(self.text_edit)
-        layout.addWidget(self.confirm_button)
+        layout.addLayout(self.horizon_Layout3)
+        layout.addLayout(self.horizon_Layout4)
 
         self.close_button = QPushButton("关闭")
+        self.close_button.setFixedSize(80,50)
         self.close_button.clicked.connect(self.close)  # 点击按钮关闭窗口
-        layout.addWidget(self.close_button)
+        layout.addWidget(self.close_button, alignment=Qt.AlignmentFlag.AlignCenter)
 
         # 设置布局
         central_widget.setLayout(layout)
+
     def update_api(self):
         # 将输入框api更新并使用
         global api_key
-        self.new_api = self.text_edit.toPlainText().strip()
+        self.new_api = self.text_edit_api.toPlainText().strip()
         if self.new_api:
             api_key = self.new_api
             self.text_show_now_api.setText(api_key)
+
+    def update_model(self):
+        # 将输入框api更新并使用
+        global model_key
+        self.new_model = self.text_edit_model.toPlainText().strip()
+        if self.new_model:
+            model_key = self.new_model
+            self.text_show_now_model.setText(model_key)
 
 
 
