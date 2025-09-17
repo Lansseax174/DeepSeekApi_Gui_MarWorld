@@ -2,13 +2,39 @@ from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QWidget, QToolTip, QPushButton, QApplication, QMainWindow, QVBoxLayout, QTextEdit, QLabel, \
     QLineEdit, QHBoxLayout
+from openai.lib.azure import API_KEY_SENTINEL
+import json
 from settings import Setting
 from worker_thread import WorkerThread
 import os
 setting = Setting()
 
-api_key = 'Your_Api_Key'
-model_key = 'deepseek-v3.1'
+API_MODEL_FILE = os.path.join("LogDialogue", "ApiAndModel.json")
+os.makedirs("LogDialogue", exist_ok=True)  # 确保目录存在
+api_key = 'Read None'
+model_key = 'Read None'
+
+# 如果文件存在 → 读取
+if os.path.exists(API_MODEL_FILE):
+    try:
+        with open(API_MODEL_FILE, 'r', encoding='utf-8') as file:
+            data = json.load(file)
+            api_key = data.get('api_key', api_key)
+            model_key = data.get('model_key', model_key)
+    except Exception as e:
+        print(f"[警告] 读取 ApiAndModel.json 失败: {e}，使用默认值。")
+
+# 如果文件不存在 → 创建并写入默认值 → 读取
+else:
+    with open(API_MODEL_FILE, 'w', encoding='utf-8') as file:
+        json.dump({'api_key':'Your_Api_Key', 'model_key':'deepseek-v3.1'}, file, ensure_ascii=False, indent=4)
+    try:
+        with open(API_MODEL_FILE, 'r', encoding='utf-8') as file:
+            data = json.load(file)
+            api_key = data.get('api_key', api_key)
+            model_key = data.get('model_key', model_key)
+    except Exception as e:
+        print(f"[警告] 读取 ApiAndModel.json 失败: {e}，使用默认值。")
 
 class QuitButton(QWidget):
 
@@ -32,7 +58,7 @@ class QuitButton(QWidget):
         # 设置按钮固定大小
         self.btn.setFixedSize(*setting.quit_button)
 
-
+# 修改API和MODEL的窗口界面
 class ModelAndApiSelectWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -120,6 +146,7 @@ class ModelAndApiSelectWindow(QMainWindow):
         if self.new_api:
             api_key = self.new_api
             self.text_show_now_api.setText(api_key)
+        self.save_api_model_to_file()
 
     def update_model(self):
         # 将输入框api更新并使用
@@ -128,9 +155,20 @@ class ModelAndApiSelectWindow(QMainWindow):
         if self.new_model:
             model_key = self.new_model
             self.text_show_now_model.setText(model_key)
+        self.save_api_model_to_file()
+
+    def save_api_model_to_file(self):
+        global API_MODEL_FILE
+        # 将当前 api_key 和 model_key 保存到 ApiAndModel.json
+        try:
+            with open(API_MODEL_FILE, "w", encoding="utf-8") as f:
+                json.dump({"api_key": api_key, "model_key": model_key}, f, ensure_ascii=False, indent=4)
+            print("[信息] ApiAndModel.json 已更新")
+        except Exception as e:
+            print(f"[错误] 保存 ApiAndModel.json 失败: {e}")
 
 
-
+# [Api-Model更改]按钮功能
 class ModelAndApiSelectButton(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
