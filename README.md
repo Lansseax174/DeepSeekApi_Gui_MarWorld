@@ -2,7 +2,7 @@
 
 一个基于 **Python + PyQt6** 的本地桌面对话应用。  
 用户只需输入自己的 **API Key** 和 **模型名称**，即可直接调用大模型进行对话，支持流式输出、思维过程展示、对话记录保存，无需服务器支持，开箱即用。
-
+   > ⚠️ 目前仅支持阿里云百炼Api以及百炼平台所提供的多个版本的DeepSeek模型  ️⚠️
 ---
 
 ## ✨ 功能特点
@@ -18,9 +18,8 @@
 ---
 
 ## 🖼️ 界面展示
-> （此处可放截图，示例）
 
-![程序截图](./screenshot.png)
+![程序截图](./demo.png)
 
 ---
 
@@ -53,7 +52,7 @@ DeepSeekApi_Gui_MarWorld/
 ## 🚀 使用方法
 
 1. 前往 [Releases](https://github.com/yourname/DeepSeekApi_Gui_MarWorld/releases) 页面  
-2. 下载最新的 `DeepSeekApi_Gui_MarWorld-v1.0.zip`  
+2. 下载最新的 `MarWorld.zip`  
 3. 解压缩后，双击运行 `MarWorld.exe` 即可使用  
    > ⚠️ 无需安装 Python 或其他依赖  
    
