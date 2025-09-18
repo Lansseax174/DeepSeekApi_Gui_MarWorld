@@ -7,7 +7,6 @@ import button
 from chat_display_screen import ChatWindow
 from dialogue_id_list_window import DialogueIdListWindow
 
-
 class WindowGui(QMainWindow):
     def __init__(self, api, setting, log_object, dialogue_id1, log_dialogue):
         super().__init__()

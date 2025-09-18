@@ -1,7 +1,25 @@
+import os
+import sys
+import markdown
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QWidget, QHBoxLayout, QLabel, QVBoxLayout, QListWidget, QListWidgetItem, QSizePolicy
 from datetime import datetime
+
+# 对话两方头像的PNG图片路径
+if getattr(sys, 'frozen', False):
+    """
+    PyInstaller 打包后，运行 exe 时，Python 解释器会在 sys 模块里注入一个属性：sys.frozen = True
+    PyInstaller 会把所有依赖的资源（图片、ico、数据文件…）解压到一个临时目录runtime临时文件夹
+    运行 exe 时，Python 解释器就会在那个临时目录里找资源
+    这个临时目录路径，PyInstaller 会存放在 sys._MEIPASS里
+    """
+    base_path = sys._MEIPASS
+else:
+    base_path = os.path.abspath('.')  # 返回当前工作目录
+
+my_avatar_path = os.path.join(base_path, 'my_avatar.png')
+avatar_path = os.path.join(base_path, 'avatar.png')
 
 def get_time():
     now = datetime.now()
@@ -31,7 +49,6 @@ class ChatBubble(QWidget):
         self.chat_bubble_time = chat_bubble_time
 
         layout = QHBoxLayout()
-
         # 头像
         avatar = QLabel(self)
         # 尺寸限制，保持比例，平滑缩放
@@ -41,7 +58,10 @@ class ChatBubble(QWidget):
         avatar.setFixedSize(40, 40)
 
         # 消息文本
-        self.message = QLabel(text)
+        self.message = QLabel()
+        html_text = markdown.markdown(text)  # 把 **加粗** 转换成 <strong>加粗</strong>
+        self.message.setTextFormat(Qt.TextFormat.RichText)  # 明确告诉 QLabel 用富文本模式
+        self.message.setText(html_text)
         self.message.setWordWrap(True)  # 自动换行true
         self.message.setStyleSheet(
             f"background-color: {'rgb(158, 234, 106)' if align == 'right' else 'rgb(225, 225, 225)'};"
@@ -117,16 +137,16 @@ class ChatWindow(QWidget):
 
     def send_assistant_message_from_dialogue_list(self, text):
         print("send_assistant_message_from_dialogue_list")
-        self.add_message('DeepSeek', text, 'left', "my_avatar.png")
+        self.add_message('DeepSeek', text, 'left', avatar_path)
 
     def send_user_message_from_dialogue_list(self, text):
         print("send_user_message_from_dialogue_list")
-        self.add_message(f'我', text, 'right', "my_avatar.png")
+        self.add_message(f'我', text, 'right', my_avatar_path)
 
     def send_assistant_message(self):
         time = get_time()
         self.chat_bubble_time = time
-        self.add_message('DeepSeek', self.assistant_answer_text, 'left', "my_avatar.png")
+        self.add_message('DeepSeek', self.assistant_answer_text, 'left', avatar_path)
 
     def send_message(self, text):
         self.user_text = text
@@ -135,7 +155,7 @@ class ChatWindow(QWidget):
             self.chat_bubble_time = time
             print(self.chat_bubble_time)
             self.user_make_bubble_judge = 1
-            self.add_message('我', self.user_text, 'right', "my_avatar.png")
+            self.add_message('我', self.user_text, 'right', my_avatar_path)
 
     def chat_bubble_time_from_json(self,time):
         if time:
@@ -165,7 +185,9 @@ class ChatWindow(QWidget):
 
     def update_stream_text(self, new_text):
         if self.chat_bubble1:
-            self.chat_bubble1.message.setText(new_text)  # 更新文本
+            html_text = markdown.markdown(new_text)  # 转换 Markdown -> HTML
+            self.chat_bubble1.message.setTextFormat(Qt.TextFormat.RichText)
+            self.chat_bubble1.message.setText(html_text) # 更新文本
             item = self.chat_list.item(self.chat_list.count() - 1)  # 获取最新消息的 item
             if item:
                 item.setSizeHint(self.chat_bubble1.sizeHint())  # 重新调整大小

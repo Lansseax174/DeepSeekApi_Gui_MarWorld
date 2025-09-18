@@ -1,3 +1,10 @@
 ﻿{
-    "dialogues": []
+    "dialogues": [
+        {
+            "time": "2025-9-18 下午 4:09",
+            "role": "user",
+            "type": "user",
+            "content": "啊"
+        }
+    ]
 }
