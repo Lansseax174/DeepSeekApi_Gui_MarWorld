@@ -25,10 +25,11 @@ class Setting:
 
         # 退出按钮的宽度,高度,字体,字号
         self.quit_button = (135, 60)
-        self.quit_button_Font = ('华文琥珀', 15)
+        self.quit_button_Font = ('华文琥珀', 13)
 
-        # 模型和api选择窗口-[打开按钮]-宽度,高度
+        # 模型和api选择窗口-[打开按钮]-宽度,高度,字体,字号
         self.model_api_select_button = (135, 60)
+        self.api_model_button_Font = ('华文琥珀', 13)
 
         # 模型和api选择窗口-宽度,高度
         self.model_api_select_window = (500, 300)
@@ -44,3 +45,15 @@ class Setting:
 
         # 对话ID-起始ID
         self.start_number_dialogue_id = 1000
+
+
+        # 目前支持的api_model文本显示框
+        self.api_model_support_list_Font = (135, 250)
+        self.api_model_support_list_text = """
+        <p><span style="font-size:8pt; font-weight:bold;">目前支持以下Api和模型</span></p>
+        <p><span style="font-size:12pt; font-weight:bold;">Api:</span></p>
+        <p><span style="font-size:8pt;">阿里云百炼Api</span></p>
+        <p><span style="font-size:12pt; font-weight:bold;">Model:</span></p>
+        <p><span style="font-size:8pt;">DeepSeek多版本</span></p>
+        <p><span style="font-size:8pt; color:gray;">注：更多模型支持待更新</span></p>
+        """

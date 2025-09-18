@@ -1,9 +1,9 @@
-from PyQt6.QtCore import Qt, QTimer
+from PyQt6.QtCore import QDate, Qt, QTime
+from PyQt6.QtCore import QTimer
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QWidget, QTextEdit, QGridLayout, QMainWindow, QVBoxLayout
-from PyQt6.QtCore import QDate, QDateTime, Qt, QTime
-import button
 
+import button
 from chat_display_screen import ChatWindow
 from dialogue_id_list_window import DialogueIdListWindow
 
@@ -90,6 +90,9 @@ class WindowGui(QMainWindow):
         # 实例化[新聊天]按钮
         self.make_new_chat_button = button.MakeNewChatButton(self.dialogue_id1,self.dialogue_list1)
 
+        # 创建一个显示api_model支持列表的显示框
+        self.api_model_support_list1()
+
         # 最右侧按钮列表垂直布局
         button_container = QWidget()
         button_layout = QVBoxLayout()
@@ -97,6 +100,7 @@ class WindowGui(QMainWindow):
         button_layout.addWidget(self.dialogueID_window)
         button_layout.addWidget(quit_button)
         button_layout.addWidget(model_api_button)
+        button_layout.addWidget(self.api_model_support_list)
         button_container.setLayout(button_layout)
 
         # 设置垂直布局👆👆👆按钮间距为 0，确保它们上下挨着
@@ -215,3 +219,9 @@ class WindowGui(QMainWindow):
                     self.input_text_edit_button.process_input_text()
                     return True
         return super().eventFilter(obj, event)
+
+    def api_model_support_list1(self):
+        self.api_model_support_list = QTextEdit()
+        self.api_model_support_list.setFixedSize(*self.setting.api_model_support_list_Font)
+        self.api_model_support_list.setReadOnly(True)
+        self.api_model_support_list.setHtml(self.setting.api_model_support_list_text)

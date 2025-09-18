@@ -176,8 +176,7 @@ class ModelAndApiSelectButton(QWidget):
 
         QToolTip.setFont(QFont('SansSerif', 10))
         self.btn = QPushButton('Api-Model更改', self)
-        font = QFont('华文琥珀', 13)  # 字体设置为Arial，大小为14
-        self.btn.setFont(font)
+        self.btn.setFont(QFont(*setting.api_model_button_Font))
         self.btn.clicked.connect(self.open_model_api_window)
         self.btn.setFixedSize(*setting.model_api_select_button)
 
