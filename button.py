@@ -225,7 +225,6 @@ class InputTextEditButton(QWidget):
         self.thread_caa = WorkerThread(self.api, self.input_text)
         self.thread_caa.start()
 
-        print(self.input_text)
         self.input_text_edit.clear()
 
 # [新聊天]按钮功能

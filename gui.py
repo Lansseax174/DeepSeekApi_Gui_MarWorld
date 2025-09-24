@@ -28,7 +28,7 @@ class WindowGui(QMainWindow):
 
         self.dialogue_id1 = dialogue_id1
         self.api = api
-        self.reasoning_text = self.api.reasoning_content_output_spread
+        self.reasoning_text = '-' * 40 + '思考内容' + '-' * 40 + '\n\n' + self.api.reasoning_content_output_spread
         self.init_window()
 
         # reasoning_content_updated_signal作为激活信号激活self.update_reasoning_text
@@ -131,7 +131,7 @@ class WindowGui(QMainWindow):
         self.setCentralWidget(central_widget)
 
     def update_reasoning_text(self, text):
-        self.reasoning_text = text
+        self.reasoning_text = '-' * 40 + '思考内容' + '-' * 40 + '\n\n' + text
         self.text_show_reasoning_content.setText(self.reasoning_text)
         self.statusBar().showMessage('正在输出思考内容...')
 

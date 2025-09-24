@@ -1,7 +1,8 @@
 from PyQt6.QtCore import pyqtSignal, QObject
-from PyQt6.QtWidgets import QApplication, QMessageBox
 from openai import OpenAI
+
 import button
+
 
 class CallAlibabaApi(QObject):
     # content_updated_signal = pyqtSignal(str)
@@ -19,9 +20,8 @@ class CallAlibabaApi(QObject):
         super().__init__()
         self.model_key = None
         self.api_key = None
-        self.reason_log_judge = 0
         self.streaming_word = ''
-        self.reason_content_default = '-' * 40 + '思考内容' + '-' * 40 + '\n\n'
+        self.reason_content_default = ''
         self.reasoning_content_output_spread = self.reason_content_default # 传参,思考内容
         self.answer_content_output_spread = ''  # 传参，回答内容
         self.input_text = None  # user输入的内容
@@ -42,7 +42,6 @@ class CallAlibabaApi(QObject):
         answer_content = ""  # 定义完整回复
         is_answering = False  # 判断是否结束思考过程并开始回复
         # 创建聊天完成请求
-        print(self.model_key)
         completion = client.chat.completions.create(
             model=self.model_key,
             messages=[
@@ -74,11 +73,7 @@ class CallAlibabaApi(QObject):
                     # 将self.reasoning_content_output_spread内容作为
                     # 信号内容通过信号content_updated_signal传出
                     self.reasoning_content_updated_signal.emit(self.reasoning_content_output_spread)
-                    self.reason_log_judge += 1
                 else:
-                    if self.reason_log_judge > 0:
-                        self.log_reasoning_content_updated_signal.emit(self.reasoning_content_output_spread)
-                        self.reason_log_judge = 0
                     # 开始回复
                     if delta.content != "" and is_answering is False:
                         print("\n" + "=" * 20 + "完整回复" + "=" * 20 + "\n")
@@ -94,6 +89,7 @@ class CallAlibabaApi(QObject):
 
 
         self.stop_answer.emit()
+        self.log_reasoning_content_updated_signal.emit(self.reasoning_content_output_spread)
         self.log_answer_content_updated_signal.emit(self.answer_content_output_spread)
         self.answer_content_output_spread = ""
         self.finished_signal.emit()  # 发送完成思考和回答的信号

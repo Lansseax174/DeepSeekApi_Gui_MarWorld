@@ -57,7 +57,8 @@ DeepSeekApi_Gui_MarWorld/
 2. 下载最新的 `MarWorld.zip`  
 3. 解压缩后，双击运行 `MarWorld.exe` 即可使用  
    > ⚠️ 无需安装 Python 或其他依赖  
-   
+4. 源代码打包.exe文件指令
+   > python -m PyInstaller -F -w run_core.py -n MarWorld --icon=mar.ico --add-data "mar.ico;." --add-data "my_avatar.png;." --add-data "avatar.png;."
 
 ---
 
