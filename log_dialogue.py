@@ -1,9 +1,7 @@
 import json
 import os
-from typing import cast
-import time
 from datetime import datetime
-from dialogue_id import DialogueID
+
 
 def get_time():
     now = datetime.now()
@@ -89,7 +87,8 @@ class LogContext:
                                           ]
         self.log_call_alibaba_api(self.add_user_input_dictionary)
 
-    def finish_api_logging(self):
+    @staticmethod
+    def finish_api_logging():
         print('finish_api_log')
 
     def log_call_alibaba_api(self, log_will_add):
@@ -115,7 +114,7 @@ class LogContext:
         else:
             data["dialogues"] = log_will_add
         with open(self.log_file, 'w', encoding='utf-8-sig') as log_file_object:
-            json.dump(data, cast("SupportsWrite[str]", log_file_object), ensure_ascii=False, indent=4)
+            json.dump(data, log_file_object, ensure_ascii=False, indent=4)
 
 
 
